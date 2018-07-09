@@ -1,0 +1,132 @@
+<{include file='Login/header.html'}>
+<style>
+body{height: 100%;}
+.wrap{background: #ebedf3;padding-bottom: 56px;padding-top: 21px;padding-left: 21px;padding-right: 21px;}
+.searchtxt{width:50px;}
+.searchbtn{width:35px;}
+.fl{float: left;color: #333333;font-size: 22px;font-family: "微软雅黑";padding-left: 20px;}
+.rl{float: right;width: 102px;height: 40px;line-height: 40px;text-align: center;background: #0398FF;margin-top: 4px;border-radius: 2px;margin-right: 10px;}
+#conHeader{overflow: hidden;border-bottom: 1px solid #dee0e5;background: #f2f4f7;border-top: 1px solid #FFFFFF;line-height: 48px;height: 48px;}
+#conHeader .fl{width: 800px;}
+/*#conHeader .btn a:hover,#conHeader .btn a:active{background: #4e9ad4;color: #fff;padding:10px;text-decoration:none;margin-right: 20px;}*/
+#conHeader .btn a{font-size: 14px;font-family: "微软雅黑","Microsoft Yahei";background: #0398FF;color: #FFFFFF;}
+.container{display: inline-block;width: 100%; box-shadow:  0 0 5px rgba(0,0,0,0.15);}
+div.table tr{height: 40px;background: #FFFFFF;}
+div.table .admin-tb th{background: #F2F4F7;border-right-color: #DEE0E5;border-top: 1px solid #FFFFFF;color: #777777;}
+.admin-tb  tr:hover { background-color:#f2f8ff;}
+.admin-tb tr:hover,.admin-tb tr.hover { background-color:#f2f8ff;}
+.tr_hover{border-left: 3px solid #FFFFFF!important;}
+.tr_hover:hover{border-left-color: #0398FF!important;}
+.Goodsclslist .show{display: block;}
+.Goodsclslist .edit{display: none;}
+.Goodsclslist.editing .show{display: none;}
+.Goodsclslist.editing .edit{display: block;}
+input[type=text]{width: 240px;height: 30px;}
+</style>
+<div class="wrap">
+    <div class="container">
+        <div id="conHeader">
+        <h1 class="fl" style="width: 600px;">商品分类</span></a></h1>
+        </div>
+		<!--////////////////////////////////-->
+		<div style="height: 30px;line-height: 30px;border-top: 1px solid #DEE0E5;border-bottom: 1px solid #DEE0E5;background: #F2F4F7;">
+			<div style="border-top: 1px solid #FFFFFF;font-size: 12px;padding-left: 10px;color: #777777;">
+				数量:<{$count}>
+			</div>
+		</div>
+        <div id="main" >
+            <div class="con">
+                <div class="table">
+                        <table class="admin-tb" id="js_data_source" style="border: none;">
+                            <tr style="border-top: 1px solid #DEE0E5;">
+                                <th style="text-align:left;max-winth;240px;min-winth;240px;width:240px;">名称</th>
+                                <th style="text-align:left;">跳转地址</th>
+                                <th style="text-align:left;">排序</th>
+                                <th style="text-align:left;width:100px;">操作</th>
+                            </tr>
+                            <{foreach from=$list item=li key=lk}>
+                            <tr class="tr_hover Goodsclslist" id="Goodscls<{$li.id}>" >
+                                <form action="?s=Goodscls&a=info&ac=edit&id=<{$li.id}>" id="Goodscls_form_<{$li.id}>" method="post">
+                                <td style="text-align:left;">
+                                    <p class="show"><{$li.title}></p>
+                                    <p class="edit"><input type="text" name="title" value="<{$li.title}>"></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p class="show"><{$li.n_url}></p>
+                                    <p class="edit"><input type="text" name="url" value="<{$li.n_url}>"></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p class="show"><{$li.orderid}></p>
+                                    <p class="edit"><input type="text" name="orderid" value="<{$li.orderid}>"></p>
+                                </td>
+                                <td style="text-align:left;white-space: nowrap;">
+                                    <div class="show">
+                                        <a href="javascript:edit_Goodscls(<{$li.id}>)">编辑</a>　<a href="javascript:del_Goodscls(<{$li.id}>)">删除</a>
+                                    </div>
+                                    <div class="edit">
+                                        <a href="javascript:save_Goodscls(<{$li.id}>)">保存</a>　<a href="javascript:edit_cancel_Goodscls(<{$li.id}>)">取消</a>
+                                    </div>
+                                </td>
+                                </form>
+                            </tr>
+                            <{/foreach}>
+                            <tr class="tr_hover Goodsclslist" id="Goodscls<{$li.id}>" >
+                                <form action="?s=Goodscls&a=info&ac=add" id="Goodscls_add_form" method="post">
+                                <td style="text-align:left;">
+                                    <p ><input type="text" name="title" placeholder="输入需要添加跳转链接的名称" value=""></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p ><input type="text" name="url" placeholder="输入跳转地址" value=""></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p ><input type="text" name="orderid" placeholder="输入排序权重（越大越靠前）" value=""></p>
+                                </td>
+                                <td style="text-align:left;white-space: nowrap;">
+                                    <div >
+                                        <a href="javascript:add_Goodscls()">添加</a>
+                                    </div>
+                                </td>
+                                </form>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                添加链接方法：1、输入需要添加跳转链接的名称，2、输入跳转地址，3.点击保存<br>
+                                修改链接方法：1、点击链接后的"编辑"，2、修改相信的内容，3.点击保存<br>
+                                </td>
+                            </tr>
+                        </table>
+                </div>
+                </form>
+            </div>
+        </div><!--/ con-->
+    </div>
+        <div class="th">
+        <{if $page}>
+        <div class="pages">
+            <{$page}>
+        </div>
+        <{/if}>
+    </div>
+</div><!--/ container-->
+</div><!--/ wrap-->
+<script>
+function edit_Goodscls(id){
+    $("#Goodscls"+id).addClass("editing");
+}
+function edit_cancel_Goodscls(id){
+    $("#Goodscls"+id).removeClass("editing");
+}
+function save_Goodscls(id){
+    $("#Goodscls_form_"+id).submit();
+    $("#Goodscls"+id).removeClass("editing");
+}
+function del_Goodscls(id){
+    if(confirm("确认删除？")){
+        window.location.href = "?s=Goodscls&a=info&ac=del&id="+id;
+    }  
+}
+function add_Goodscls(){
+    $("#Goodscls_add_form").submit();
+}
+</script>
+<{include file='Login/footer.html'}>

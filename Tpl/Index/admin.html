@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>管理中心-网址导航建站系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta content="www.114la.com" name="Copyright" />
+<style type="text/css">
+html{ overflow:hidden;}
+table,td,th, body,dt,dd,dl{ margin:0; padding:0; border:none;}
+#nav { background: repeat-x url(./static/images/repeat.gif) 0 -209px ; font-size:12px; position:static; top:0; left:0;height:32px; line-height:26px; padding: 0 10px; }
+#nav a { color:#666; text-decoration:none; }
+#nav a:hover { color:#f60; text-decoration:underline;}
+#nav dt, #nav dd { float:left;}
+#nav dd { color:#999;}
+#nav dt,#nav dd.link {    background: url(./static/images/zu_icon6.png?v=2.0) no-repeat right 0px!important;padding: 0 26px 0 19px!important;color: #444444!important;background-size: auto 100%!important;}
+/*//////////////////////////////////*/
+	#nav {
+	    background: #F7F7F7!important;
+	    font-size: 12px;
+	    position: static;
+	    top: 0;
+	    left: 0;
+	    height: 44px;
+	    line-height: 26px;
+	    padding: 0 10px;
+	}
+	#nav dd.link {
+	    padding-right: 16px;
+	    background: url(./static/images/images.gif) no-repeat right -204px!important;
+	}
+	.password{display: none;}
+	.password_all{min-width: 125px;}
+	.password_all>span:last-child{background: url(./static/images/zu_icon7.png) no-repeat;background-size: 100%;display: inline-block;width: 10px;height: 5px;}
+	.td_height{height: 70px;}
+	.show{position: relative;z-index: 100;}
+	.password_show{background: #FFFFFF;border-radius: 3px;display: inline-block;box-shadow: 0 0 10px 0 rgba(155,143,143,0.6);-webkit-box-shadow: 0 0 10px 0 rgba(155,143,143,0.6);-moz-box-shadow: 0 0 10px 0 rgba(155,143,143,0.6);-ms-box-shadow: 0 0 10px 0 rgba(155,143,143,0.6);}
+	.password_set{cursor: pointer;}
+	.password_set:hover{text-decoration: underline;color: #FF2244;}
+	.password_show>div{padding: 17px 11px 15px 11px;line-height: 12px;}
+	.password_show>div:nth-child(1){border-bottom: 1px solid #dee0e5;color: #3E3E3E;}
+	.password_show>div:nth-child(2){overflow: hidden;color: #777777;}
+	.password_show>div:nth-child(2) a{color: #777777;}
+	.password_show>div:nth-child(2) a:hover{color: #ff2244!important;}
+	.password_show>div:nth-child(2)>span{float: left;}
+	.password_show>div:nth-child(2)>span:nth-child(2){height: 12px;width: 1px;background: #777777;margin: 0 14px 0;}
+	.menu_width{width: 159px;}
+	#nav dl{height: 44px;font-size: 14px;line-height: 44px;border-bottom: 1px solid #dee0e5;}
+	#nav dl dt{height: 44px;}
+	#nav dl dd{height: 44px;}
+	#nav dd.link{background: url(./static/images/zu_icon6.png?v=2.0) no-repeat right 0px!important;padding: 0 26px 0 19px!important;color: #444444!important;background-size: auto 100%!important;}
+	#nav dd.link:nth-child(1) img{margin: 12px 0 0 0;}
+	#nav dd.link a{color: #444444;}
+	/*////////////////////////密码设置/////////////////////////////*/
+	.password_alert{display: none; position: fixed;border-radius: 2px;width: 440px; background: #FFFFFF;left: 50%;top: 50%;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);-moz-transform: translate(-50%,-50%);z-index: 1000;}
+	.password_title{text-align: center;font-family: "微软雅黑";font-size: 18px;height: 50px;line-height: 50px;overflow: hidden;border-bottom: 1px solid #cdd2e3;}
+	.password_title img{float: right;margin-top: 15px;margin-right: 22px;cursor: pointer;}
+	.password_title span{float: left;margin-left: 184px;}
+	.password_input{overflow: hidden;height: 28px;line-height: 28px;text-align: center;margin-left: 95px;}
+	.password_input span{float: left;font-size: 12px;color: #333333;margin-right: 7px;}
+	.password_input input{float: left;border: 1px solid #dee0e5;border-radius: 2px;width: 186px;height: 28px;}
+	.change{width: 100%;height: 45px;line-height: 45px;background: #f6f6f6;margin-top: 30px;padding-top: 11px;}
+	.change>div{width: 90px;height: 34px;line-height: 34px; text-align: center;margin:  0 auto;background: #0398FF;color: #FFFFFF;font-size: 16px;font-family: "微软雅黑";border-radius: 3px;}
+	@-webkit-keyframes an_width_start{
+		from{width: 159px;}
+		to{width: 60px;}
+	}
+	@-webkit-keyframes an_width_end{
+		from{width: 60px;}
+		to{width: 159px;}
+	}
+	@-webkit-keyframes an_width_start_1{
+		from{width: 159px;}
+		to{width: 60px;}
+	}
+	@-webkit-keyframes an_width_end_1{
+		from{width: 60px;}
+		to{width: 159px;}
+	}
+	
+	.warn{overflow: hidden;width: 268px;height: 28px;margin-left: 86px;border: 1px solid #f3d194;border-radius: 3px;background: #fff3e1;margin-top: 15px;color: #f97c2e;font-family: "微软雅黑";font-size: 14px;display: none;}
+	.warn span{float: left;width: 14px;height: 14px;background: url(./static/images/zu_icon_warn.png) no-repeat;background-size: 100%;margin-top: 7px;margin-left: 10px;}
+	.warn p{float: left;margin-left: 10px;height: 28px;line-height: 28px;}
+	.success_alert{position: absolute;top: 50%;left: 50%;width: 150px;height: 150px;background: rgba(0,0,0,0.5);border-radius: 5px; transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);-moz-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);display: none;}
+	.success_alert>div{width: 71px;height: 70px;background: url(./static/images/zu_success_icon.png) no-repeat;background-size: 100%;margin: 19px auto 20px;}
+	.success_alert>p{color: #FFFFFF;font-family: "微软雅黑";font-size: 20px;text-align: center;}
+	/*/////////////////////////////////*/
+	#sidebar_page{background: #f7f7f7;font-family: "微软雅黑";}
+	.wrap_menu{padding-top: 17px;width: 159px;}
+	.zu_menu{padding: 10px 0;padding-left: 20px;border: 1px solid rgba(0,0,0,0);}
+	.menu_width{background: #F7F7F7;border-right: 1px solid #dee0e5;}
+	.zu_menu_part{position: absolute;height: 38px;font-family: '微软雅黑';font-size: 14px;background: #F5F5F5;top: -1px;line-height: 38px;left: 58px;display: none;padding-left: 22px;padding-right: 36px;white-space: nowrap;}
+	.curr{border: 1px solid #e5e5e5;border-right: none;cursor: pointer;background: #F5F5F5;}
+	.curr .zu_menu_part{display: block;border: 1px solid #e5e5e5;border-left: none;}
+</style>
+
+</head>
+<body scroll="no" onLoad="init()"><!-- onLoad="init();"-->
+<table cellpadding="0" cellspacing="0" width="100%" height="100%">
+    <tr>
+        <td colspan="2" height="70"><iframe src="?s=index&a=header" name="header" target="menu" width="100%" height="70" scrolling="no" frameborder="0"></iframe></td>
+        <div class="password_revise" style="margin-top: 22px;position: absolute;right: 0px;z-index: 10000;margin-right: 28px;">
+    		<div class="password_all" style="font-size: 14px;color: #FFFFFF;cursor: pointer;">
+    			<span><{$smarty.const.USERNAME}></span>
+    			<span></span>
+    		</div>
+    		<div class="password" style="float: right; display: none;">
+    			<div style="position: relative;top: 1px;left: 77px;width: 13px;height: 6px;background: url(./static/images/zu_icon2.png) no-repeat;background-size: 100%;"></div>
+    			<div class="password_show">
+    				<div style="font-size: 12px;">账号: <{$smarty.const.USERNAME}></div>
+    				<div style="font-size: 12px;">
+    					<span class="password_set"><a href="?s=member&amp;a=member_password&amp;name=<{$smarty.const.USERNAME}>" target="main">密码设置</a></span>
+    					<span></span>
+    					<span><a href="?s=login&amp;a=logout" style="font-size: 12px;">退出</a></span>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </tr>
+    <tr style="height:100%;min-height:450px;">
+        <td valign="top" rowspan="2" width="160" height="100%" class="menu_hide"><iframe src="?s=index&a=menu&showWelcome=1" name="menu" target="main" width="100%" height="100%" scrolling="no" frameborder="0"></iframe></td>
+        <td valign="top" width="" align="left">   
+        	<table  cellpadding="0" cellspacing="0" width="100%" height="100%">
+                <tr>
+                    <td valign="top" width="100%"><iframe src="?s=index&a=welcome" id="main" name="main" width="100%" height="100%"  frameborder="0" scrolling="yes" style="overflow:visible;"></iframe></td><!--  ?c=login&a=welcome  -->
+                </tr>
+            </table>
+        
+        </td>
+    </tr>
+</table>
+<script src="./static/js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	
+	$('.zu_menu').mouseover(function () {
+		if($('.wrap_menu').attr('show')=='ture'){
+			$(this).addClass('curr');
+		}
+	})
+	$('.zu_menu').mouseout(function () {
+		$(this).removeClass('curr');
+	})
+	$('.zu_menu_part').click(function () {
+		window.location.href="/?s=Matchs";
+	})
+	$('.zu_game_list').click(function () {
+		window.location.href="/?s=Matchs";
+	})
+	
+//	$('.password_all').click(function () {
+//		if($(this).attr('password')=='show'){
+//			$(this).removeAttr('password');
+//			$('.password').hide();
+//		}else{
+//			$(this).attr('password','show')
+//			$('.password').show();
+//		}
+//	})
+	/////////////显示改密码的入口/////
+	$('.password_revise').mouseover(function () {
+		$('.password').show();
+	})
+	$('.password_revise').mouseout(function () {
+		$('.password').hide();
+	})
+	
+	
+	$('.password_set').click(function () {
+		$('.password_alert').show();
+	})
+	$('.password_title img').click(function () {
+		$('.password_alert').hide();
+	})
+	
+	//////////////改密码//////////////////////
+	$('.change').click(function () {
+		var or_password=$('.old_password input').val();
+		var new_password=$('.new_password input').val();
+		var re_password=$('.re_password input').val();
+		if(or_password==''||new_password==''||re_password==''){
+			$('.warn').show();
+			$('.old_password').css('margin-top','15px');
+			if(or_password==''){
+				$('.warn p').html('请输入原始密码');
+				return false;
+			}
+			if(new_password==''){
+				$('.warn p').html('请输入新密码');
+				return false;
+			}
+			if(re_password==''){
+				$('.warn p').html('请确认新密码');
+				return false;
+			}
+		}
+		if(new_password!=re_password){
+			$('.warn').show();
+			$('.old_password').css('margin-top','15px');
+			$('.warn p').html('两次输入密码不一致!');
+			return false;
+		}
+		$('.warn').hide();
+		$('.old_password').css('margin-top','15px');
+		$.ajax({
+			type:"post",
+			url:"?s=Member&a=ajaxUppassword",
+			async:true,
+			data:{orpassword:or_password,password:new_password,repassword:re_password},
+			dataType:"json",
+			success:function (data) {
+				if(data.error==0){
+					$('.success_alert').show();
+					setTimeout(function () {
+						$('.password_alert').hide();
+						$('.success_alert').hide();
+					},2000);
+				}
+				if(data.error==1){
+					$('.warn').show();
+					$('.old_password').css('margin-top','30px');
+					$('.warn p').html(data.msg);
+				}
+			}
+		});
+	})
+</script>
+<script type="text/javascript">
+var init = function(){
+	var nav = document.getElementById("nav");
+	var main = document.getElementById("main");
+	
+		var mainDom;
+		if(document.all){
+			mainDom = main.contentWindow.document;
+		}else {
+			mainDom = main.contentDocument;
+		}
+
+		nav.innerHTML = mainDom.getElementById("nav").innerHTML;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<{include file='Login/header.html'}>
+<style>
+.wrap{background: #ebedf3;padding-bottom: 56px;padding-top: 21px;padding-left: 21px;padding-right: 21px;}
+.searchtxt{width:50px;}
+.searchbtn{width:35px;}
+.fl{float: left;color: #333333;font-size: 22px;font-family: "微软雅黑";padding-left: 20px;}
+.rl{float: right;height: 40px;line-height: 40px;text-align: center;margin-top: 4px;border-radius: 2px;margin-right: 10px;}
+#conHeader{overflow: hidden;border-bottom: 1px solid #dee0e5;background: #f2f4f7;border-top: 1px solid #FFFFFF;line-height: 48px;height: 48px;}
+#conHeader .fl{width: 800px;}
+/*#conHeader .btn a:hover,#conHeader .btn a:active{background: #4e9ad4;color: #fff;padding:10px;text-decoration:none;margin-right: 20px;}*/
+#conHeader .btn a{font-size: 14px;font-family: "微软雅黑","Microsoft Yahei";background: #0398FF;color: #FFFFFF;padding: 0 10px;height: 40px;line-height: 40px;display: inline-block;}
+#conHeader .btn input[type=text]{height: 40px;border: none;}
+.container{display: inline-block;width: 100%; box-shadow:  0 0 5px rgba(0,0,0,0.15);}
+div.table tr{height: 40px;background: #FFFFFF;}
+div.table .admin-tb th{background: #F2F4F7;border-right-color: #DEE0E5;border-top: 1px solid #FFFFFF;color: #777777;}
+/*/////////////////*/
+
+.admin-tb  tr:hover { background-color:#f2f8ff;}
+.admin-tb tr:hover,.admin-tb tr.hover { background-color:#f2f8ff;}
+.tr_hover{border-left: 3px solid #FFFFFF!important;}
+.tr_hover:hover{border-left-color: #0398FF!important;}
+</style>
+<div class="wrap">
+    <div class="container">
+        <div id="conHeader">
+            <h1 class="fl" style="width: 600px;"><{$page_title}>&nbsp;&nbsp;(链接：<a href="http://xxaq.iqikj.com/Lists?sname=<{$sname}>" target='_blank'><span style="font-size:16px;">http://xxaq.iqikj.com/Lists?sname=<{$sname}></span></a>)</h1>
+            <div class="rl btn" >
+            <{if $sname!='iq_news'}><a href="/?s=article&a=cls&sname=<{$sname}>" style="margin-right:10px;">添加分类</a><{/if}>
+            <a href="/?s=article&a=info&ac=add&sname=<{$sname}>">发布新文章</a>
+            </div>
+        </div>
+        <div style="height: 30px;line-height: 30px;border-top: 1px solid #DEE0E5;border-bottom: 1px solid #DEE0E5;background: #F2F4F7;">
+            <div style="border-top: 1px solid #FFFFFF;font-size: 12px;padding-left: 10px;color: #777777;">
+                数量:<{$count}>
+            </div>
+        </div>
+        <div id="main">
+            <div class="con">
+                <div class="table">
+                    <form action="<{$Reques_uri}>&ac=export" method="post" id="orderlist_form">
+                        <table class="admin-tb" id="js_data_source">
+                            <tr>
+                                <!--<th>ID</th>-->
+                                <th style="text-align:center;">ID</th>
+                                <th style="text-align:center;">标题</th>
+                                <{if $sname!='iq_news'}><th style="text-align:center;">分类</th><{/if}>
+                                <th style="text-align:center;">作者</th>
+                                <th style="text-align:center;">排序</th>
+                                <th style="text-align:center;">发布时间</th>                                
+                                <th style="text-align:center;">最后编辑</th>
+                                <th style="text-align:center;">状态</th>
+                                <th style="text-align:center;">操作</th>
+                            </tr>
+                            <{foreach from=$list item=li key=lk}>
+                            <tr>
+                                <!--<td><{$lk+1}></td>-->
+                                <td style="text-align:center;max-width:160px;"><{$li.id}></td>
+                                <td style="text-align:center;max-width:80px;"><{$li.title}></td>
+                                <{if $sname!='iq_news'}><td style="text-align:center;max-width:80px;"><{$li.c_name}></td><{/if}>
+                                <td style="text-align:center;max-width:70px;"><{$li.source}></td>
+                                <td style="text-align:center;max-width:70px;"><{$li.orderid}></td>
+                                <td style="text-align:center;max-width:70px;"><{$li.ctime}></td>
+                                <td style="text-align:center;max-width:80px;"><{$li.utime}></td>
+                                <td style="text-align:center;max-width:60px;"><{if $li.isdel==0}>上线<{else}>下线<{/if}></td>
+                                <td style="text-align:center;min-width:70px;">
+                                    [<a href="./?s=Article&a=info&id=<{$li.id}>&ac=edit&sname=<{$sname}>">编辑</a>]&nbsp;&nbsp;
+                                     <{if $li.isdel==0}>
+                                    [<a href="./?s=Article&a=info&id=<{$li.id}>&ac=state&state=1">删除</a>]&nbsp;&nbsp;
+                                    <{else}>
+                                    [<a href="./?s=Article&a=info&id=<{$li.id}>&ac=state&state=0">上线</a>]&nbsp;&nbsp;
+                                    <{/if}>
+                                    [<a href="http://xxaq.iqikj.com/Article?id=<{$li.id}>" target="_blank">预览</a>]
+                                </td>
+                            </tr>
+                            <{/foreach}>
+                        </table>
+
+                        <div class="th">
+                            <!--<input type="button" exportall="id" class="export" value=" 导出 "/><span style="color:red"> &nbsp;&nbsp;*导出当前页面勾选的订单</span>-->
+                            <{if $page}>
+                            <div class="pages">
+                                <{$page}>
+                            </div>
+                            <{/if}>
+                        </div>
+                </div>
+                </form>
+            </div>
+        </div><!--/ con-->
+    </div>
+</div><!--/ container-->
+</div><!--/ wrap-->
+<{include file='Login/footer.html'}>

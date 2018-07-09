@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=<{$charset|default:'utf-8'}>" />
+<title></title>
+<link href="static/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="static/js/jquery-1.3.2.min.js"></script>
+<!--<script type="text/javascript" src="static/js/sidebar.js"></script>-->
+<style type="text/css">
+	.zu_nav{background: #ededed;height: 44px;width: 159px;border-right: 1px solid #dee0e5;border-bottom: 1px solid #dee0e5;overflow: hidden;line-height: 44px;cursor: pointer;}
+	.zu_nav span:nth-child(1){float: left;padding-left: 29px;font-family: "微软雅黑","Microsoft Yahei";font-size: 16px;color: #757575;}
+	.zu_nav span:nth-child(2){float: left;margin-left: 28px;margin-top: 14px;width: 19px;height: 15px;background: url(./static/images/zu_icon5.png) no-repeat;background-size: 100%;}
+	.item ul{font-size: 12px;margin: 16px 0 -11px 0;overflow: hidden;display: none;}
+	.item ul a{color: #565656;}
+	.item ul li{line-height: 14px;padding: 0 0!important;}
+	.click_color span{background: #0398FF!important;}
+	.click_color a{color: #0398FF!important;}	
+	.item ul li span{float: left; width: 3px;height: 10px;background: #f7f7f7;margin-top: 2px;}
+	.item h2{cursor: pointer;}
+	@-webkit-keyframes _nav{
+		from{transform: rotateZ(0);-webkit-transform: rotateZ(0);}
+		to{transform: rotateZ(90deg);-webkit-transform: rotateZ(90deg);}
+	}
+	@-moz-keyframes _nav{
+		from{-moz-transform: rotateZ(0);}
+		to{-moz-transform: rotateZ(90deg);}
+	}
+	@-ms-keyframes _nav{
+		from{-ms-transform: rotateZ(0);}
+		to{-ms-transform: rotateZ(90deg);}
+	}
+	@-webkit-keyframes _nav_end{
+		from{-webkit-transform: rotateZ(90deg);transform: rotateZ(90deg);}
+		to{-webkit-transform: rotateZ(0deg);transform: rotateZ(0deg);}
+	}
+	@-moz-keyframes _nav_end{
+		from{-moz-transform: rotateZ(90deg);}
+		to{-moz-transform: rotateZ(0deg);}
+	}
+	@-ms-keyframes _nav_end{
+		from{-ms-transform: rotateZ(90deg);}
+		to{-ms-transform: rotateZ(0deg);}
+	}
+</style>
+</head>
+<body id="sidebar_page">
+<div class="wrap" style="background: #F7F7F7;">
+	<div class="zu_nav"><span>网站导航</span><span></span></div>
+    <div class="cotainer">
+        <div id="sidebar">
+        <div class="con">
+        <!--公用-->
+        <!--<h2>管理首页</h2>-->
+        <!--<p class="userpanel">       
+        用户名：<{$smarty.const.USERNAME}><br />
+        级　别：<{if 1==$smarty.const.If_manager}>超级管理员<{else}>管理员<{/if}><br />
+        <a href="./?s=member&a=member_password&name=<{$smarty.const.USERNAME}>" target='main'>密 码</a> |
+        <a href="./?s=index&a=welcome" target='main'>主 页</a>|
+        <a href="./?s=login&a=logout" target="_parent">退 出</a>
+        </p>-->
+        <{$data}>
+        </div><!--/ .con-->
+        </div><!--/ sidebar-->
+    </div>
+</div>
+<script type="text/javascript">
+$('.item h2').click(function () {
+	$(this).parent().find('ul').slideToggle('fast');
+})
+
+$('.item ul li').click(function () {
+	$('.con').find('.click_color').removeClass('click_color');
+	$(this).addClass('click_color');
+})
+
+$('.zu_nav').click(function () {
+	if($(window.parent.document).find('.menu_hide').width()>100){
+		$(window.parent.document).find('.menu_hide').css('animation','an_width_start 0.5s forwards');
+		$('.zu_nav span:first-child').hide();
+		$('.zu_nav span:last-child').css('margin-left','18px');
+		$('.zu_nav span:last-child').css('animation','_nav 0.5s forwards');
+		$('.item h2 span:last-child').hide();
+		$('.item ul').each(function () {
+			if($(this).css('display')=='block'){
+				$(this).attr('show','true');
+				$(this).hide();
+			}else{
+				$(this).removeAttr('show');
+			}
+		})
+		
+	}else{
+		$(window.parent.document).find('.menu_hide').css('animation','an_width_end 0.5s forwards');
+		$('.zu_nav span:first-child').show();
+		$('.zu_nav span:last-child').css('margin-left','28px');
+		$('.zu_nav span:last-child').css('animation','_nav_end 0.5s forwards');
+		$('.item h2 span:last-child').show();
+		$('.item ul').each(function () {
+			if($(this).attr('show')){
+				$(this).show();
+			}
+		})
+	}
+})
+
+////////////图标json/////////////
+var icon_json={'产品管理':'./static/images/zu_icon3.png','会员管理':'./static/images/vip.png','营销管理':'./static/images/marketing.png','商户管理':'./static/images/third_party.png','系统设置':'./static/images/install.png','邮件发送':'./static/images/mail.png','订单管理':'./static/images/order.png'};
+$('.item h2 span:last-child').each(function () {
+	var dif=$(this).html();
+	$(this).parent().find('.title_icon').css('background-image','url('+icon_json[dif]+')');
+	
+})
+
+
+
+$(document).ready(function(){
+    <{if $showWelcome==0}>
+    var aArr = $(".con").find("li:first a");
+    if (aArr)
+    {
+        aArr.addClass("active");
+        $('#main', window.parent.document).attr('src', aArr.attr('href'));
+    }
+    <{/if}>
+})
+</script>
+</body>
+</html>

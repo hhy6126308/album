@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="./static/css/style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+</style>
+</head>
+
+<body>
+<div class="wrap">
+    <div class="container">
+        <div id="header">
+
+            <div class="con" style="overflow: hidden;">
+
+            <div id="logo" style="float: left;">
+                <a href="./?s=login&a=welcome" title="悠德奇管理系统" target="main">悠德奇管理系统</a>
+            </div>
+            <div style="height: 28px;width: 1px;background: #FFFFFF;float: left;margin-left: 20px;margin-top: 20px;"></div>
+            <div id="menu" style="float: left;line-height: 70px;">
+                    <div class="item">
+                        <ul>
+                        <{foreach from=$menu item=i key=k name=n}>
+                            <li class="index active" id="tab<{$smarty.foreach.n.index}>"><a href="?s=index&a=menu&id=<{$smarty.foreach.n.index}>" id="item<{$smarty.foreach.n.index}>" target="menu" onclick="Tabmenu(document.getElementById('tab<{$smarty.foreach.n.index}>'),<{$smarty.foreach.n.index}>);"><{$k}></a></li>                            
+                        <{/foreach}>
+                        </ul>
+                    </div>
+                </div><!--/ menu-->
+            </div><!--/ con-->
+        </div><!--/ header-->
+</div>
+</div>
+<script type="text/javascript">
+function Tabmenu(obj,n){
+	var Items = document.getElementById("menu").getElementsByTagName("li");
+	for(var i= 0,len = Items.length;i<len;++i){
+		if(Items[i].className !=="index"){
+			Items[i].className = "index";
+		}
+		obj.className = "index active";
+		obj.blur();
+		location.hash = n;
+	}
+};
+(function(){
+var n = location.hash.replace("#","");
+if(!n){ n = 0;}
+var curitem = document.getElementById("tab"+n);
+	Tabmenu(curitem,n);
+})();
+</script>
+</body>
+</html>
