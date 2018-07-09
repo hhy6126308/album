@@ -1,0 +1,34 @@
+<?php
+namespace Home\Controller;
+
+use \Home\Model\AlbumSettingModel;
+
+class AlbumSettingController extends BaseController {
+
+    public function _initialize () {
+        layout("Comon/layout");
+        $this->checkAuth();
+    }
+
+    public function index () {
+        layout("Comon/layout");
+        $M = new AlbumSettingModel;
+        $uid = 1;
+        if ($_POST) {
+            try {
+                $data['reward'] = safe_string($_POST['reward']) ? safe_string($_POST['reward']) : 0;
+                if ( false === $M->where("id=$uid")->save($data) ) {
+                    throw new \Think\Exception("系统错误保存失败！", 1);
+                }
+                $this->success("保存成功！", '/AlbumSetting', 3);
+                exit();
+            } catch ( \Think\Exception $e ) {
+                $this->error($e->getMessage(), '/AlbumSetting', 3);
+            }
+        }
+        $setting = $M->where("id=$uid")->find();
+        $this->assign('setting', $setting);
+        $this->display();
+    }
+
+}

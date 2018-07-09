@@ -1,0 +1,142 @@
+<div class="row-content am-cf">
+<div class="row">
+    <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+        <div class="widget am-cf">
+            <div class="widget-head am-cf">
+                <div class="widget-title  am-cf">
+                    商品分类
+                    <ol class="am-breadcrumb" style="float: right">
+                        <li><a href="#" class="am-icon-home">首页</a></li>
+                        <foreach name="npc" item="vo" >
+                            <li><a href="<{$vo.url}>"><{$vo.name}></a></li>
+                        </foreach>     
+                    </ol>
+                </div>
+            </div>
+            <div class="widget-body  am-fr">
+                <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                    <div class="am-form-group">
+                        <div class="am-btn-toolbar">
+                            <div class="am-btn-group am-btn-group-xs">
+                                <button type="button" class="am-btn am-btn-default am-btn-success" id="j_add_goodscls"><span class="am-icon-plus"></span> 新增</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+<!--                     <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                        <input type="text" class="am-form-field " >
+                        <span class="am-input-group-btn">
+                            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>
+                        </span>
+                    </div> -->
+                </div>
+
+                <div class="am-u-sm-12">
+                    <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
+                        <thead>
+                            <tr>
+                                <th>商品分类名</th>
+                                <th>排序</th>
+                                <th>创建时间</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <foreach name="lists" item="i">
+                            <form action="/Goods/goodscls?ac=edit&id=<{$i.id}>"  class="am-form am-form-horizontal" method='post' id="goodscls_edit_<{$i.id}>">
+                                <tr class="gradeX wm-form">
+                                    <td class="am-text-middle">
+                                        <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p wm-editing">
+                                            <input type="text" class="am-form-field am-round"  placeholder="请输入商品分类名" name='g_cls_name' value="<{$i.g_cls_name}>">
+                                        </div>
+                                        <div class="wm-showing">
+                                            <{$i.g_cls_name}>
+                                        </div>
+                                    </td>
+                                    <td class="am-text-middle">
+                                        <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p wm-editing">
+                                            <input type="number" class="am-form-field am-round" placeholder="请输入商品分类名" name='g_cls_order' value="<{$i.g_cls_order}>">
+                                        </div>
+                                        <div class="wm-showing">
+                                            <{$i.g_cls_order}>
+                                        </div>
+                                    </td>
+                                    <td class="am-text-middle"><{$i.g_cls_ctime}></td>
+                                    <td class="am-text-middle"><{$i['g_cls_state']==0?'上线':'下线'}></td>
+                                    <td class="am-text-middle">
+                                        <div class="tpl-table-black-operation wm-editing">
+                                            <a href="" class="j-save-btn" data-id="goodscls_edit_<{$i.id}>">
+                                                <i class="am-icon-save"></i> 保存
+                                            </a>
+                                            <a href="" class="tpl-table-black-operation-del j-cancel-btn">
+                                                <i class="am-icon-close"></i> 取消
+                                            </a>
+                                        </div>
+                                        <div class="tpl-table-black-operation wm-showing">
+                                            <a href="" class="j-edit-btn">
+                                                <i class="am-icon-pencil"></i> 编辑
+                                            </a>
+                                            <a href="/Goods/goodscls?ac=del&id=<{$i.id}>" class="tpl-table-black-operation-del j-del-btn">
+                                                <i class="am-icon-trash"></i> 删除
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </form>
+                            </foreach>
+                            <!-- more data -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="am-u-lg-12 am-cf">
+                    <div class="am-fr">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$("body").append($('<div class="am-modal am-modal-prompt" tabindex="1200" id="my-prompt">\
+    <div class="am-modal-dialog"> \
+        <div class="am-modal-hd">添加商品分类</div>\
+        <div class="am-modal-bd">\
+            输入分类名称\
+            <input type="text" class="am-modal-prompt-input">\
+        </div>\
+        <div class="am-modal-footer">\
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>\
+            <span class="am-modal-btn" data-am-modal-confirm>提交</span>\
+        </div>\
+    </div>\
+</div>'));
+$('#j_add_goodscls').on('click', function() {
+    $('#my-prompt').modal({
+        relatedTarget: this,
+        onConfirm: function(e) {
+            $.ajax({
+                url : '/Goods/goodscls?ac=add',
+                type: "POST",
+                dataType: "json",
+                timeout:'30000',
+                data : {g_cls_name:e.data},
+                dataType :'json',
+                success:function(data){
+                    if (data.error == 0) {
+                        alert('添加成功！');
+                        window.location.href = window.location.href; 
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        },
+        onCancel: function(e) {
+            
+        }
+    });
+});
+</script>
