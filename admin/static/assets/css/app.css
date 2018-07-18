@@ -1934,6 +1934,11 @@ ul.tpl-dropdown-content .tpl-dropdown-menu-messages-item .menu-messages-content 
     width: 375px;
     height: 238px;
 }
+.wx-img-sg{
+  border: 1px solid #c2cad8;
+  width: 375px;
+  height: 667px;
+}
 #j-banner-lists li {
     position: relative;
     padding:0;

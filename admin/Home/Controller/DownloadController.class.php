@@ -1,15 +1,91 @@
 <?php
 namespace Home\Controller;
+use \Home\Model\ImgModel;
 
 class DownloadController extends BaseController {
 
     public function _initialize(){
-//        $this->checkAuth();
-//        $this->SAVE_PATH    ="./public/";
-//        $this->SAVE_URL     = C('SavePicUrl');
+        $this->SAVE_PATH    = APP_PATH . "../public";
     }
 
     public function index()
+    {
+        try {
+            $ids = safe_string($_GET['ids']);
+            $album_id = safe_string($_GET['album_id']);
+            if (empty($ids))
+                return false;
+            $ids = explode(',', $ids);
+            $M = new ImgModel();
+            $images = $M->where(['id' => ['in', $ids]])->select();
+            $fileNames = array_column($images, 'img_url');
+            $tmpPath = APP_PATH . "/Runtime/Temp/".rand(10000, 99999).'.zip';
+            if(file_exists($tmpPath)){
+                unlink($tmpPath);
+            }
+            $zip = new \ZipArchive();
+            if($zip->open($tmpPath, \ZipArchive::CREATE)=== TRUE){
+                foreach ($fileNames as $fileName){
+                    $file = $this->SAVE_PATH . $fileName;
+                    if(is_file($file)){
+                        $file_info_arr= pathinfo($file);
+                        $zip->addFile($file, $file_info_arr['basename']);
+                    }
+                }
+            }
+            $zip->close();
+
+            ob_end_clean();
+            header("Cache-Control:");
+            header("Cache-Control: public");
+            #header("Content-Type: application/force-download");
+            #header("Content-Transfer-Encoding: binary");
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename='.$album_id.'.zip');
+            header("Accept-Ranges: bytes");
+            #header('Content-Length: '.filesize($filename));
+            error_reporting(0);
+
+            $size = filesize($tmpPath);
+            //如果有$_SERVER['HTTP_RANGE']参数
+            $range = 0;
+            if (isset ($_SERVER['HTTP_RANGE'])) {
+                list ($a, $range) = explode("=", $_SERVER['HTTP_RANGE']);
+                //if yes, download missing part
+                str_replace($range, "-", $range); //这句干什么的呢。。。。
+                $size2      = $size - 1; //文件总字节数
+                $new_length = $size2 - $range; //获取下次下载的长度
+                header("HTTP/1.1 206 Partial Content");
+                header("Content-Length: $new_length"); //输入总长
+                header("Content-Range: bytes $range$size2/$size"); //Content-Range: bytes 4908618-4988927/4988928 95%的时候
+            } else {
+                //第一次连接
+                $size2 = $size - 1;
+                header("Content-Range: bytes 0-$size2/$size"); //Content-Range: bytes 0-4988927/4988928
+                header("Content-Length: " . $size); //输出总长
+            }
+            //打开文件
+            $fp = fopen("$tmpPath", "rb");
+            //设置指针位置
+            fseek($fp, $range);
+            //虚幻输出
+            while (!feof($fp)) {
+                //设置文件最长执行时间
+                set_time_limit(0);
+                print (fread($fp, 1024)); //输出文件
+                flush(); //输出缓冲
+                ob_flush();
+                usleep(1000);
+            }
+            fclose($fp);
+            unlink($tmpPath);
+            exit;
+        } catch ( \Think\Exception $e ) {
+            $this->error($e->getMessage(), '/Album', 3);
+        }
+    }
+
+    public function indextest()
     {
         $res = array(
             array(

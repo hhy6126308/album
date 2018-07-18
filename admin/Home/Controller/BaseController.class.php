@@ -12,7 +12,7 @@ class BaseController extends Controller {
     protected function checkAuth () {
         if (!session("ADMIN_AUTHID")) {
             session("SESSION_HISTORYURL",$_SERVER['REQUEST_URI']);
-            redirect ( '/Account/login' );
+            redirect ( '/Login' );
         }
     }
 
@@ -49,7 +49,7 @@ class BaseController extends Controller {
         header("Access-Control-Allow-Methods:GET,POST,OPTIONS,PUT");    
         $returnStr = "";
         if(is_array($array)){
-            $array['datetime'] = Date("Y-m-d H:i:s");
+            $array['datetime'] = date("Y-m-d H:i:s");
             $rs = json_encode($array);
             $rs = preg_replace("/null/i", '""', $rs);
             $returnStr = $rs;

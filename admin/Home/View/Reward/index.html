@@ -1,0 +1,74 @@
+<div class="row-content am-cf">
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">
+                        打赏列表
+                        <ol class="am-breadcrumb" style="float: right">
+                            <li><a href="#" class="am-icon-home">首页</a></li>
+                            <foreach name="npc" item="vo" >
+                                <li><a href="<{$vo.url}>"><{$vo.name}></a></li>
+                            </foreach>
+                        </ol>
+                    </div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-2">
+                        <div class="am-input-group tpl-table-list-select">
+                            <select data-am-selected class="j-select">
+                                <option value="img_name" <if condition = "$select == 'img_name'">selected </if>>相片名</option>
+                                <option value="album_name" <if condition = "$select == 'album_name'">selected </if>>相册名</option>
+                                <option value="nick_name" <if condition = "$select == 'nick_name'">selected </if>>微信昵称</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                        <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                            <input type="text" class="am-form-field j-keyword" value="<{$keyword}>">
+                        <span class="am-input-group-btn">
+                            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search j-search" type="button"></button>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12">
+                        <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
+                            <thead>
+                            <tr class="am-text-nowrap">
+                                <th>相片名</th>
+                                <th>相册名</th>
+                                <th>金额(元)</th>
+                                <th>微信昵称</th>
+                                <th>打赏时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <foreach name='lists' item='i'>
+                                <tr class="gradeX">
+                                    <td class="am-text-middle"><{$i.img_name}></td>
+                                    <td class="am-text-middle"><{$i.album_name}></td>
+                                    <td class="am-text-middle">¥<{$i.reward_amount}></td>
+                                    <td class="am-text-middle"><{$i.nick_name}></td>
+                                    <td class="am-text-middle"><{$i.create_time}></td>
+                                </tr>
+                            </foreach>
+                            <!-- more data -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="am-u-lg-12 am-cf">
+                        <div class="am-fr">
+                            <{$page}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(".j-search").click(function(){
+            var select = $('.j-select').val();
+            var keyword = $('.j-keyword').val();
+            window.location.href = '/Reward?keyword=' + keyword + '&select=' + select;
+        });
+    </script>

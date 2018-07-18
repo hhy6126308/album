@@ -1,11 +1,12 @@
 <?php
 namespace Home\Controller;
+use \Home\Model\ImgModel;
 
 class UploadController extends BaseController {
 
     public function _initialize(){
         $this->checkAuth();
-        $this->SAVE_PATH    ="./public/";
+        $this->SAVE_PATH    = APP_PATH . "../public";
         $this->SAVE_URL     = C('SavePicUrl');
     }
 
@@ -39,7 +40,7 @@ class UploadController extends BaseController {
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
-            $save_path = realpath($save_path) . '/';
+            $save_path = realpath($save_path).'/';
             $dir_name='image';
             //创建文件夹
             if ($dir_name !== '') {
@@ -51,7 +52,7 @@ class UploadController extends BaseController {
             }
             $ymd = date("Ymd");
             $save_path .= $ymd . "/";
-            $save_url .= 'image/'.$ymd . "/";
+            $save_url .= '/image/'.$ymd . "/";
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
@@ -207,7 +208,7 @@ class UploadController extends BaseController {
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
-            $save_path = realpath($save_path) . '/';
+            $save_path = realpath($save_path);
             $dir_name='image';
             //创建文件夹
             if ($dir_name !== '') {
@@ -219,7 +220,7 @@ class UploadController extends BaseController {
             }
             $ymd = date("Ymd");
             $save_path .= $ymd . "/";
-            $save_url .= 'image/'.$ymd . "/";
+            $save_url .= '/image/'.$ymd . "/";
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
@@ -287,8 +288,9 @@ class UploadController extends BaseController {
 
         // Settings
         // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $targetDir = 'download/target';
-        $uploadDir = 'download/upload';
+        $targetDir = APP_PATH . "/Runtime/Temp";
+        $imgUrl = '/image/'. date('Ymd') . '/' . $album_id;
+        $uploadDir = $this->SAVE_PATH . $imgUrl;
 
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds
@@ -303,7 +305,7 @@ class UploadController extends BaseController {
         if (!file_exists($uploadDir)) {
             @mkdir($uploadDir);
         }
-
+        $uploadDir = realpath($uploadDir) . '/';
         // Get a file name
         if (isset($_REQUEST["name"])) {
             $fileName = $_REQUEST["name"];
@@ -312,9 +314,15 @@ class UploadController extends BaseController {
         } else {
             $fileName = uniqid("file_");
         }
-
+        $M = new ImgModel();
+        $lastImageId = 1;
+        $lastImg = $M->order('id desc')->field('id')->limit(1)->find();
+        if(!empty($lastImg)){
+            $lastImageId = $lastImg['id'] + 1;
+        }
+        $fileName = $album_id.'_'.$lastImageId.'_'.$fileName;
         $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
-        $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+        $uploadPath = $uploadDir . $fileName;
 
         // Chunking might be enabled
         $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
@@ -405,12 +413,19 @@ class UploadController extends BaseController {
             @fclose($out);
         }
 
-
-
+        //create img
+        $data['album_id'] = $album_id;
+        $data['img_name'] = explode('.', $fileName)[0];
+        $data['img_url'] = $imgUrl.'/'.$fileName;
+        $data['create_time'] = date("Y-m-d H:i:s");
+        if(false === $M->add($data)){
+            die('{"jsonrpc" : "2.0", "error" : {"code": 422, "message": "加入相册失败"}, "id" : "id"}');
+        }
+        //update name
 
         // Return Success JSON-RPC response
         //die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
-        die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "成功了"}, "id" : "id"}');
+        die('{"jsonrpc" : "2.0", "error" : {"code": 200, "message": "成功了"}, "id" : "id"}');
     }
 
 }

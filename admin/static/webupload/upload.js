@@ -154,11 +154,11 @@
             server: '/Upload/webuploader',
             // runtimeOrder: 'flash',
 
-            // accept: {
-            //     title: 'Images',
-            //     extensions: 'gif,jpg,jpeg,bmp,png',
-            //     mimeTypes: 'image/*'
-            // },
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            },
 
             // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
             disableGlobalDnd: true,
@@ -470,7 +470,7 @@
                 case 'finish':
                     stats = uploader.getStats();
                     if ( stats.successNum ) {
-                        alert( '上传成功!' );
+                        //alert( '上传成功!' );
                     } else {
                         // 没有成功的图片，重设
                         state = 'done';
@@ -493,8 +493,11 @@
 
         uploader.onUploadAccept = function(object, ret) {
             console.log(object)
-            setState( 'error' );
             console.log(ret)
+            if(ret.error.code != 200){
+                alert(ret.error.message);
+                //setState( 'error' );
+            }
         };
 
 
@@ -544,7 +547,16 @@
         });
 
         uploader.onError = function( code ) {
-            alert( 'Eroor: ' + code );
+            switch (code){
+                case "Q_EXCEED_NUM_LIMIT":
+                    alert("超出最大张数");
+                    break;
+                case "F_DUPLICATE":
+                    alert("文件重复");
+                    break;
+                default:
+                    alert( 'Eroor: ' + code );
+            }
         };
 
         $upload.on('click', function() {

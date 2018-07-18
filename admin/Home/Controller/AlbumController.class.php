@@ -2,6 +2,7 @@
 namespace Home\Controller;
 
 use \Home\Model\AlbumModel;
+use \Home\Model\ImgModel;
 
 class AlbumController extends BaseController {
 
@@ -12,6 +13,7 @@ class AlbumController extends BaseController {
     public function _initialize () {
         layout("Comon/layout");
         $this->checkAuth();
+        session('SESSION_HISTORYURL', '/Album');
         $this->assign('sidebar_name','album');
     }
 
@@ -19,7 +21,7 @@ class AlbumController extends BaseController {
         Vendor('Mypaging.page');
         $M = new AlbumModel;
         $keyword = safe_string($_GET['keyword']);
-        $where = "is_del=0";
+        $where = "1=1";
         if ($keyword) {
             $where .= " and  album_name like '%$keyword%'";
         }
@@ -27,6 +29,7 @@ class AlbumController extends BaseController {
         $count = $lists ? count($lists) : 0;
         $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
         $page = $pageM->show();
+        $this->assign('savePicUrl',C('SavePicUrl'));
         $this->assign('page',$page);
         $this->assign('lists',$lists);
         $this->assign('keyword',$keyword);
@@ -46,14 +49,16 @@ class AlbumController extends BaseController {
                     }
                     if ($_POST) {
                         $data['album_name'] = safe_string($_POST['album_name']);
-                        $data['album_banner'] = safe_string($_POST['album_banner']);
+                        $banner = parse_url(safe_string($_POST['album_banner']));
+                        $index = parse_url(safe_string($_POST['album_index']));
+                        $data['album_banner'] = $banner['path'];
+                        $data['album_index'] = $index['path'];
                         $data['album_des'] = safe_string($_POST['album_des']);
-                        $data['u_t'] = Date("Y-m-d H:i:s");
                         if ( empty($data['album_name']) ) {
                             throw new \Think\Exception("商品名称不能为空！", 1);  
                         } 
                         if ($ac == 'add') {
-                            $data['c_t'] = Date("Y-m-d H:i:s");
+                            $data['create_time'] = date("Y-m-d H:i:s");
                             if ( false === $M->add($data)) {
                                 throw new \Think\Exception("相册添加失败！", 1);
                             }
@@ -78,9 +83,45 @@ class AlbumController extends BaseController {
             #$info['g_banners'] = $info['g_banners'] ? unserialize($info['g_banners']) : array() ;
             $this->assign('ac',$ac);
             $this->assign('info',$info);
+            $this->assign('savePicUrl',C('SavePicUrl'));
             $this->display();
         } catch ( \Think\Exception $e ) {
             $this->error($e->getMessage(), '/Album', 3);
+        }
+    }
+
+    public function detail()
+    {
+        Vendor('Mypaging.page');
+        $ac = safe_string($_GET['ac']);
+        $album_id = safe_string($_GET['album_id']);
+        $id = safe_string($_GET['id']);
+        $keyword = safe_string($_GET['keyword']);
+
+        $album = new AlbumModel();
+        $image = new ImgModel();
+        try {
+            if(!empty($ac) && !empty($id) && $ac == 'del'){
+                $image->where("id=$id")->delete();
+            }
+            $info = $album->where("id=$album_id")->find();
+            $where = "album_id=$album_id";
+            if ($keyword) {
+                $where .= " and  img_name like '%$keyword%'";
+            }
+
+            $detail = $image->where($where)->order("id desc")->select();
+            $count = $detail ? count($detail) : 0;
+            $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
+            $page = $pageM->show();
+            $this->assign('page',$page);
+            $this->assign('info',$info);
+            $this->assign('detail',$detail);
+            $this->assign('keyword',$keyword);
+            $this->assign('savePicUrl',C('SavePicUrl'));
+            $this->display();
+        }catch ( \Think\Exception $e ) {
+            $this->error($e->getMessage(), '/Album/detail?album_id='.$album_id, 3);
         }
     }
 

@@ -7,5 +7,5 @@ return array(
     'TMPL_L_DELIM'=>'<{',
     'TMPL_R_DELIM'=>'}>',
     'USER_SALT' =>'4%&&*',
-    'SavePicUrl' => "http://127.0.0.1:8071/",//图片路径
+    'SavePicUrl' => "https://image.album.iqikj.com",//图片路径
 );

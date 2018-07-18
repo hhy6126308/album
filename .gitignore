@@ -3,3 +3,6 @@
 *.project
 /.settings
 /.idea
+/public/image/*
+/admin/Runtime/*
+/api/Runtime/*

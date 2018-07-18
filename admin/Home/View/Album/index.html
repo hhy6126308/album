@@ -36,10 +36,11 @@
                     <div class="am-u-sm-12">
                         <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
                             <thead>
-                            <tr>
-                                <th>相册缩略图</th>
-                                <th>相册标题</th>
-                                <th>相册介绍</th>
+                            <tr class="am-text-nowrap">
+                                <th>Banner</th>
+                                <th>启动图</th>
+                                <th>标题</th>
+                                <th>介绍</th>
                                 <th>浏览数</th>
                                 <th>创建时间</th>
                                 <th>操作</th>
@@ -49,19 +50,21 @@
                             <foreach name='lists' item='i'>
                                 <tr class="gradeX">
                                     <td>
-                                        <img src="<{$i.album_banner}>" class="tpl-table-line-img" alt="">
+                                        <img src="<{$savePicUrl}><{$i.album_banner}>" class="tpl-table-line-img" alt="">
+                                    </td>
+                                    <td>
+                                        <img src="<{$savePicUrl}><{$i.album_index}>" class="tpl-table-line-img" alt="" style="width: 37px;height: 65.66px;">
                                     </td>
                                     <td class="am-text-middle" style="max-width: 200px;"><{$i.album_name}></td>
                                     <td class="am-text-middle" style="max-width: 200px;"><{$i.album_des}></td>
-                                    <td class="am-text-middle"><{$i.album_look}></td>
-                                    <td class="am-text-middle">
-                                        <{$i.c_t}>
-                                    </td>
-                                    <td class="am-text-middle">
+                                    <td class="am-text-middle"><{$i.album_pv}></td>
+                                    <td class="am-text-middle"><{$i.create_time}></td>
+                                    <td class="am-text-middle am-text-nowrap">
                                         <div class="tpl-table-black-operation">
+                                            <a href="/Album/detail?album_id=<{$i.id}>">详情</a>
                                             <a href="/Album/info?ac=edit&id=<{$i.id}>">编辑</a>
                                             <a href="/Album/upload?id=<{$i.id}>">批量上传</a>
-                                            <a href="/Album/order?ac=edit&id=<{$i.id}>">打赏记录</a>
+                                            <a href="/Reward?album_id=<{$i.id}>">打赏记录</a>
                                         </div>
                                     </td>
                                 </tr>

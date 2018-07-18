@@ -42,10 +42,10 @@
                     <ul>
                         <!-- 欢迎语 -->
                         <li class="am-text-sm tpl-header-navbar-welcome">
-                            <a href="javascript:;">欢迎你, 
+                            <a href="javascript:;">欢迎你,
                                 <span>
-                                    <if condition="$Think.session.ADMIN_APPNAME neq ''">
-                                        <{$Think.session.ADMIN_APPNAME}>
+                                    <if condition="$Think.session.ADMIN_NAME neq ''">
+                                        <{$Think.session.ADMIN_NAME}>
                                     <else />
                                         <{$Think.session.ADMIN_EMAIL}>
                                     </if>
@@ -54,7 +54,7 @@
                         </li>
                         <!-- 退出 -->
                         <li class="am-text-sm">
-                            <a href="/Account/loginout">
+                            <a href="/User/loginout">
                                 <span class="am-icon-sign-out"></span> 退出
                             </a>
                         </li>
@@ -82,39 +82,73 @@
             <div class="tpl-sidebar-user-panel">
                 <div class="tpl-user-panel-slide-toggleable">
                     <div class="tpl-user-panel-profile-picture">
-                        <img src="/static/assets/img/user04.png" alt="">
+                        <img src="/static/assets/img/user07.png" alt="">
                     </div>
                     <span class="user-panel-logged-in-text">
                         <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
-                        <if condition="$Think.session.ADMIN_APPNAME neq ''">
-                            <{$Think.session.ADMIN_APPNAME}>
+                        <if condition="$Think.session.ADMIN_NAME neq ''">
+                            <{$Think.session.ADMIN_NAME}>
                         <else />
                             <{$Think.session.ADMIN_EMAIL}>
                         </if>
                     </span>
+                    <!--
                     <a href="javascript:;" class="tpl-user-panel-action-link">
                         <span class="am-icon-pencil"></span>
                         <a href="/AlbumSetting">相册设置</a>
                     </a>
+                    -->
                 </div>
             </div>
 
             <!-- 菜单 -->
             <ul class="sidebar-nav">
+                <!--
                 <li class="sidebar-nav-link">
-                    <a href="index.html" class="<if condition = "$sidebar_name == 'index'">active </if> ">
+                    <a href="/Index" class="<if condition = "$sidebar_name == 'index'">active </if> ">
                         <i class="am-icon-home sidebar-nav-link-logo"></i> 首页
                     </a>
                 </li>
+                -->
                 <li class="sidebar-nav-link">
                     <a href="/Album" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'album'">active </if> ">
-                        <i class="am-icon-flag sidebar-nav-link-logo"></i> 相册管理
+                        <i class="am-icon-photo sidebar-nav-link-logo"></i> 相册管理
                     </a>
                 </li>
-<!--                 <li class="sidebar-nav-heading">Page<span class="sidebar-nav-heading-info"> 常用页面</span></li> -->
+                <li class="sidebar-nav-link">
+                    <a href="/Reward" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'reward'">active </if> ">
+                    <i class="am-icon-gift sidebar-nav-link-logo"></i> 打赏管理
+                    </a>
+                </li>
                 <li class="sidebar-nav-link">
                     <a href="javascript:;" class="sidebar-nav-sub-title">
-                        <i class="am-icon-flag sidebar-nav-link-logo"></i> 商品管理
+                    <i class="am-icon-user sidebar-nav-link-logo"></i> 用户管理
+                    <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub" style="<if condition = "$sidebar_name == 'user_list' || $sidebar_name == 'edit' ">display: block </if>">
+                        <li class="sidebar-nav-link">
+                            <a href="/User" class="<if condition = "$sidebar_name == 'user_list'">active </if> "">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 用户列表
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="/User/edit" class="<if condition = "$sidebar_name == 'edit'">active </if> "">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 修改密码
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-nav-link">
+                    <a href="/AlbumSetting" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'album_setting'">active </if> ">
+                    <i class="am-icon-gear sidebar-nav-link-logo"></i> 系统设置
+                    </a>
+                </li>
+
+<!--
+                <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                        <i class="am-icon-truck sidebar-nav-link-logo"></i> 商品管理
                         <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
                     </a>
                     <ul class="sidebar-nav sidebar-nav-sub" style="display: block;">
@@ -162,6 +196,7 @@
                         </li>
                     </ul>
                 </li>
+-->
             </ul>
         </div>
         <!-- 内容区域 -->
@@ -170,7 +205,6 @@
         </div>
     </div>
     </div>
-    <script src="/static/assets/js/amazeui.min.js"></script>
     <script src="/static/assets/js/amazeui.datatables.min.js"></script>
     <script src="/static/assets/js/dataTables.responsive.min.js"></script>
     <script src="/static/assets/js/amazeui.datetimepicker.min.js"></script>

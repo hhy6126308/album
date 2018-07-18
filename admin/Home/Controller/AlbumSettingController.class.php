@@ -5,9 +5,15 @@ use \Home\Model\AlbumSettingModel;
 
 class AlbumSettingController extends BaseController {
 
+    protected $npc = array(
+        array("url" => '/AlbumSetting', 'name' => '系统设置' ),
+    );
+
     public function _initialize () {
         layout("Comon/layout");
         $this->checkAuth();
+        session('SESSION_HISTORYURL', '/AlbumSetting');
+        $this->assign('sidebar_name','album_setting');
     }
 
     public function index () {
