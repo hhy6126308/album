@@ -12,8 +12,8 @@
 // 应用入口文件
 // 检测PHP环境
 if(version_compare(PHP_VERSION,'5.3.0','<'))  die('require PHP > 5.3.0 !');
-
-$_SERVER['PATH_INFO'] = parse_url($_SERVER['REQUEST_URI'])['path'];
+//Homestead环境下打开
+//$_SERVER['PATH_INFO'] = parse_url($_SERVER['REQUEST_URI'])['path'];
 // 开启调试模式 建议开发阶段开启 部署阶段注释或者设为false
 define('APP_DEBUG',true);
 
