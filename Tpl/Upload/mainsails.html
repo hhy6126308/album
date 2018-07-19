@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Cropper</title>
+
+  <link href="static/js/cropper/cropper.css" rel="stylesheet">
+
+  <style>
+    .img-container{width: 780px; height: 380px; border: solid 1px #000000; background-color: #8C9197;}
+
+  </style>
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+
+  <![endif]-->
+</head>
+<body>
+<!-- header -->
+
+<!-- Content -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <!-- <h3 class="page-header">Demo:</h3> -->
+      <div class="img-container">
+        <img src="" style="" alt="">
+      </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-9 docs-buttons">
+      <!-- <h3 class="page-header">Toolbar:</h3> -->
+      <div class="btn-group">
+      </div>
+
+      <div class="btn-group">
+        <div style="margin-left: 150px;margin-top: 10px;font-size: 12px">
+          宽:<input class="form-control" id="dataWidth" type="text" placeholder="width" readonly style="margin-right: 50px">
+          高:<input class="form-control" id="dataHeight" type="text" placeholder="height" readonly>
+        </div>
+       <button style="display: inline-block;width: auto;height: auto;padding-top: 0;height: 30px;width: 100px;margin-right: 120px;margin-left: 200px"><label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" style="">选择图片
+          <input class="form-control" id="dataX" type="hidden" placeholder="x">
+          <input class="form-control" id="dataY" type="hidden" placeholder="y">
+          <input class="form-control" id="dataRotate" type="hidden" placeholder="rotate">
+          <input class="sr-only" id="inputImage" name="file" type="file" accept="image/" style="display: none">
+        </label></button><button class="btn btn-primary" data-method="getCroppedCanvas" type="button" style="height: 30px;display: inline-block;;margin-top: 10px;width: 100px;outline: none">
+            <span class="docs-tooltip" data-toggle="tooltip">
+              确认上传
+            </span>
+        </button>
+      </div>
+
+      <div class="btn-group btn-group-crop">
+      </div>
+        <p>1、点击“选择图片”，并选择你上传的图片 <br>2、对选择的图片进行编辑和裁剪
+        <br>3、点击“确认上传”</p>
+    </div><!-- /.docs-toggles -->
+  </div>
+</div>
+<form action="?s=Editor&a=mainsailsimg" method='post' id="matchinfo_form">
+  <textarea name="imgBase64" id="imgBase64" style="display:none"></textarea>
+    <input name="w" id="w" type="hidden" value="">
+    <input name="h" id="h" type="hidden" value="">
+    <input name="flag" id="flag" type="hidden" value="">
+</form>
+<script src="static/js/cropper/jquery.min.js"></script>
+<script src="static/js/cropper/bootstrap.min.js"></script>
+<script src="static/js/cropper/cropper.js"></script>
+<script src="static/js/cropper/main.js"></script>
+<script type="text/javascript">
+
+  function checkform(){
+    if($("#img").val()=="") {
+      alert("图片上转传失败 请在此选择图片区域上传");
+      return false;
+    }
+    return true;
+  }
+
+  function GetRequest() {
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      strs = str.split("&");
+      for(var i = 0; i < strs.length; i ++) {
+        theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+      }
+    }
+    return theRequest;
+  }
+</script>
+
+<!-- Alert
+<div class="docs-alert"><span class="warning message"></span></div> -->
+
+<!-- Scripts -->
+</body>
+</html>

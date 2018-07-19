@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>相册后台</title>
+    <meta name="description" content="这是一个 index 页面">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="/static/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <script src="/static/assets/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/static/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/amazeui.datatables.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/app.css">
+    <link rel="stylesheet" href="/static/assets/css/amazeui.datetimepicker.css">
+    <script src="/static/assets/js/jquery.min.js"></script>
+    <style>
+        .tpl-content-wrapper .am-breadcrumb{padding:0;margin-bottom: 0;}
+    </style>
+</head>
+<body data-type="index">
+    <script src="/static/assets/js/theme.js"></script>
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <header>
+            <!-- logo -->
+            <div class="am-fl tpl-header-logo">
+                <a href="javascript:;">相册管理系统</a>
+            </div>
+            <!-- 右侧内容 -->
+            <div class="tpl-header-fluid">
+                <!-- 侧边切换 -->
+                <div class="am-fl tpl-header-switch-button am-icon-list">
+                    <span></span>
+                </div>
+                <!-- 其它功能-->
+                <div class="am-fr tpl-header-navbar">
+                    <ul>
+                        <!-- 欢迎语 -->
+                        <li class="am-text-sm tpl-header-navbar-welcome">
+                            <a href="javascript:;">欢迎你,
+                                <span>
+                                    <if condition="$Think.session.ADMIN_NAME neq ''">
+                                        <{$Think.session.ADMIN_NAME}>
+                                    <else />
+                                        <{$Think.session.ADMIN_EMAIL}>
+                                    </if>
+                                </span>
+                            </a>
+                        </li>
+                        <!-- 退出 -->
+                        <li class="am-text-sm">
+                            <a href="/User/loginout">
+                                <span class="am-icon-sign-out"></span> 退出
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <!-- 风格切换 -->
+        <div class="tpl-skiner">
+            <div class="tpl-skiner-toggle am-icon-cog">
+            </div>
+            <div class="tpl-skiner-content">
+                <div class="tpl-skiner-content-title">
+                    选择主题
+                </div>
+                <div class="tpl-skiner-content-bar">
+                    <span class="skiner-color skiner-white" data-color="theme-white"></span>
+                    <span class="skiner-color skiner-black" data-color="theme-black"></span>
+                </div>
+            </div>
+        </div>
+        <!-- 侧边导航栏 -->
+        <div class="left-sidebar">
+            <!-- 用户信息 -->
+            <div class="tpl-sidebar-user-panel">
+                <div class="tpl-user-panel-slide-toggleable">
+                    <div class="tpl-user-panel-profile-picture">
+                        <img src="/static/assets/img/user07.png" alt="">
+                    </div>
+                    <span class="user-panel-logged-in-text">
+                        <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
+                        <if condition="$Think.session.ADMIN_NAME neq ''">
+                            <{$Think.session.ADMIN_NAME}>
+                        <else />
+                            <{$Think.session.ADMIN_EMAIL}>
+                        </if>
+                    </span>
+                    <!--
+                    <a href="javascript:;" class="tpl-user-panel-action-link">
+                        <span class="am-icon-pencil"></span>
+                        <a href="/AlbumSetting">相册设置</a>
+                    </a>
+                    -->
+                </div>
+            </div>
+
+            <!-- 菜单 -->
+            <ul class="sidebar-nav">
+                <!--
+                <li class="sidebar-nav-link">
+                    <a href="/Index" class="<if condition = "$sidebar_name == 'index'">active </if> ">
+                        <i class="am-icon-home sidebar-nav-link-logo"></i> 首页
+                    </a>
+                </li>
+                -->
+                <li class="sidebar-nav-link">
+                    <a href="/Album" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'album'">active </if> ">
+                        <i class="am-icon-photo sidebar-nav-link-logo"></i> 相册管理
+                    </a>
+                </li>
+                <li class="sidebar-nav-link">
+                    <a href="/Reward" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'reward'">active </if> ">
+                    <i class="am-icon-gift sidebar-nav-link-logo"></i> 打赏管理
+                    </a>
+                </li>
+                <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                    <i class="am-icon-user sidebar-nav-link-logo"></i> 用户管理
+                    <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub" style="<if condition = "$sidebar_name == 'user_list' || $sidebar_name == 'edit' ">display: block </if>">
+                        <li class="sidebar-nav-link">
+                            <a href="/User" class="<if condition = "$sidebar_name == 'user_list'">active </if> "">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 用户列表
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="/User/edit" class="<if condition = "$sidebar_name == 'edit'">active </if> "">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 修改密码
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-nav-link">
+                    <a href="/AlbumSetting" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'album_setting'">active </if> ">
+                    <i class="am-icon-gear sidebar-nav-link-logo"></i> 系统设置
+                    </a>
+                </li>
+
+<!--
+                <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                        <i class="am-icon-truck sidebar-nav-link-logo"></i> 商品管理
+                        <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub" style="display: block;">
+                        <li class="sidebar-nav-link">
+                            <a href="/Goods">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 商品列表
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="/Goods/goodsinfo?ac=add">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 添加商品
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="/Goods/goodscls">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 商品分类
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-nav-link">
+                    <a href="javascript:;" class="sidebar-nav-sub-title">
+                        <i class="am-icon-cart-plus sidebar-nav-link-logo"></i> 订单管理
+                        <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                    </a>
+                    <ul class="sidebar-nav sidebar-nav-sub" style="display: block;">
+                        <li class="sidebar-nav-link">
+                            <a href="table-list.html">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 商品列表
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="table-list-img.html">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 添加商品
+                            </a>
+                        </li>
+
+                        <li class="sidebar-nav-link">
+                            <a href="table-list-img.html">
+                                <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 商品分类
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+-->
+            </ul>
+        </div>
+        <!-- 内容区域 -->
+        <div class="tpl-content-wrapper">
+            {__CONTENT__}
+        </div>
+    </div>
+    </div>
+    <script src="/static/assets/js/amazeui.datatables.min.js"></script>
+    <script src="/static/assets/js/dataTables.responsive.min.js"></script>
+    <script src="/static/assets/js/amazeui.datetimepicker.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+<div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">是否删除？</div>
+    <div class="am-modal-bd">
+      
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+      <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<{include file='Login/header.html'}>
+<body id="main_page">
+
+<script type="text/javascript" src="static/js/graph/highstock.js"></script>
+<script type="text/javascript" src="static/js/graph/grid.js"></script>
+<style>
+table td{
+	height:30px; border:1px solid #ccc;
+}
+table th{
+	height:30px; border:1px solid #ccc;
+}
+.sp{
+	margin-bottom:5px;
+}
+</style>
+<div style = "width:100%;">
+<div style="text-align:center;padding-top:50px;"><h2 style="color:red;">统计图</h2><h1><{$title}>[<{$wtitle}>] </h1></div>
+<hr/>
+<div style="padding-left:10px;color:red;">
+总pv:<font id="pv"></font><br/>
+总uv:<font id="uv"></font>
+</div>
+<div class="col-2 col-auto mr10" style="width:97%; margin-left:10px; margin-top:5px;">
+  <div class="content" style="color:#ff0000;height: 370px;width:96.9%;" id='stat'> </div>
+</div>
+<script type="text/javascript">
+Highcharts.setOptions(
+		{
+		global: {useUTC: false, VMLRadialGradientURL: 'js/vml-radial-gradient.png'},
+		lang:
+		{
+		rangeSelectorZoom: '范围:', rangeSelectorFrom: '从', rangeSelectorTo: '到',
+		resetZoom: '还原', resetZoomTitle: '还原为1:1',
+		months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+		weekdays: ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+		}
+		,colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+});
+//data=[{"x":1376637054,"y":17},{"x":1376637252,"y":17}];
+		data=<{$pvdata}>;
+		$('#pv').html(data.allPv);
+		$('#uv').html(data.allUv);
+		chart = new Highcharts.StockChart(
+		{
+			chart: { 
+				renderTo: 'stat',
+				zoomType: 'x',
+				 events: {
+	                    load: function() {
+	                    	/*series = this.series;
+	                    	console.log(series[0]);
+	                    	setTimeout(function(){
+	                    		series[0].addPoint([1378814600000,20]);
+		                        series[1].addPoint([1378814600000,10]);
+	                    	},3000);*/
+	                    },
+	                    click: function(e) {
+	                        // find the clicked values and the series
+	                        //var x = e.xAxis[0].value,
+	                        //    y = e.yAxis[0].value,
+	                        //    series = this.series;
+	                    	//alert(series);
+	    
+	                        // Add it
+	                        //series[0].addPoint([1378664280000,y]);
+	                       // series[1].addPoint([1378664280000,y]);
+	    
+	                    }
+	                }
+				},
+			title: { text: 'pv-uv'},
+			credits: {enabled: false}, // 
+			//legend: {enabled: true,y:10},
+			tooltip: {xDateFormat: '%Y-%m-%d %H:%M'}, 
+			rangeSelector:
+			{
+			buttons:
+			[
+			{type: 'minute', count: 60, text: '1h'},
+			{type: 'minute', count: 8*60, text: '8h'},
+			{type: 'day', count: 1, text: '1d'},
+			{type: 'week', count: 1, text: '1w'},
+			{type: 'all', count: 1, text: 'all'}
+			],
+			selected: 2,
+			inputDateFormat: '%m-%d %H:%M', inputEditDateFormat: '%Y-%m-%d %H:%M',
+			inputStyle: {color: '#039', width: 150}
+			},
+			series:
+			[
+				{
+					name: 'pv',
+					dataGrouping: {enabled: false}, 
+					data: data.data.pv
+				},
+				{
+					name: 'uv',
+					dataGrouping: {enabled: false}, 
+					data: data.data.uv
+				}
+			]
+		});
+		
+</script>
+</div>
+<div>
+</div>
+<style>
+.tjmain{margin-top:50px;padding-left:10px;border:1px solid #ff0000;}
+.left{float:left;width:120px;border-bottom:1px solid #ff0000;height:20px;padding-top:10px;}
+.cls{clear:both;}
+</style>
+<div class="tjmain">
+<div><h1>历史信息</h1></div>
+<{foreach from=$history item=i key=k name=n}>
+<div class="cls data">
+        <div class="left">pv:<span><{$i.pv}></span></div>
+        <div class="left">uv:<span><{$i.uv}></span></div>
+        <div class="left">time:<a href="./?s=Managetj&a=history&id=<{$i.id}>"><{$i.ctime}></a></div>
+</div>
+<{/foreach}>
+<div class="cls"></div>
+<script>
+$(".tjmain .data").each(function(){
+		var mpvobj=$(this).find('.left').eq(0).find('span');
+		var muvobj=$(this).find('.left').eq(1).find('span');
+        var mpv=mpvobj.html();
+        var muv=muvobj.html();
+        var npv=$(this).next('div').find('.left').eq(0).find('span').html();
+        var nuv=$(this).next('div').find('.left').eq(1).find('span').html();
+        if(npv !== null){
+			if(mpv-npv>=0){
+				mpvobj.css('color','red');
+			}else{
+				mpvobj.css('color','green');
+			}
+        }
+        if(nuv !== null){
+			if(muv-nuv>=0){
+				muvobj.css('color','red');
+			}else{
+				muvobj.css('color','green');
+			}
+        }
+});
+/* setTimeout(function(){
+	window.location.reload();
+},30000); */
+</script>
+</div>
+<{include file='Login/footer.html'}>

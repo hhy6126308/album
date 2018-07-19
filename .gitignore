@@ -1,0 +1,11 @@
+##IDE support
+*.buildpath
+*.project
+.DS_Store
+/.settings
+/.idea
+/public/image/*
+/admin/Runtime/Cache/Home/*
+/admin/Runtime/Logs/Home/*
+/api/Runtime/Cache/Home/*
+/api/Runtime/Logs/Home/*

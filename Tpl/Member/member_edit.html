@@ -1,0 +1,113 @@
+<{include file='Login/header.html'}>
+<style>
+	.table-font ul{float:left;width:150px;padding-right:50px;}
+	.table-font ul h4{font-size:20px;}
+	.table-font ul div{padding-left:15px;height:25px;} 
+	.table-font .title{font-weight: bold;}
+</style>
+<body id="main_page">
+
+<div class="wrap">
+    <div class="container">
+        
+        <div id="main">
+            
+            
+            <div class="con box-green">
+                <form action="<{$sys.subform}>" method="post" enctype="multipart/form-data">
+<div class="box-header">
+                    <h4>修改用户权限: <{$data.user_name}></h4>
+                </div>
+                <style type="text/css" >
+                	.table-font td { width:100px;}
+                </style>
+                <div class="box-header">
+                   
+                        <table class="table-font" style="width:1000px; margin-left:5px;">
+                            <tr>
+                            <td>
+                            <{foreach from=$menu item=i key=k name=n}>
+                              <ul>
+                              	<li>
+                           	  		 <h4><input type="checkbox" id="checkbox_<{$smarty.foreach.n.index}>" rel="<{$smarty.foreach.n.index}>" onClick="checkSameRel(this);" /> <label for="checkbox_<{$smarty.foreach.n.index}>"><{$k}></label></h4>
+                           	  	</li>
+                           	  	<li>
+                           	  		<{foreach from=$i item=ii key=kk name=nn}>
+                           	  		<div class="title"><{$kk}></div>
+
+                           	  			<{foreach from=$ii item=iii key=kkk name=nnn}>
+
+                           	  				<div class="items"><label>
+                                                <input rel="<{$smarty.foreach.n.index}>" name="auth[]" type="checkbox" id="checkbox_<{$smarty.foreach.nnn.index}>" value="<{$iii.right}>" <{if $auth[$iii.right]}> checked <{/if}> /><{$kkk}></label></div>
+                                           <{if $kkk=="赛事列表"}>
+                                                <div class="items"><label>
+                                                    &nbsp; &nbsp;<input rel="0" name="auth[]" type="checkbox"  value="domestic"  <{if $auth['domestic']}> checked <{/if}> /></label>国内
+                                                </div>
+                                                <div class="items"><label>
+                                                    &nbsp; &nbsp;<input rel="0" name="auth[]" type="checkbox"  value="abroad"  <{if $auth['abroad']}> checked <{/if}> /></label>海外
+                                                </div>
+
+                                    <{/if}>
+                                    <{/foreach}>
+                           	  		<{/foreach}>
+                           	  	</li>
+                           	  </ul>
+                            <{/foreach}>
+                            <div style="clear: both;"></div>
+                            </td>
+                           	  <!-- <td><input type="checkbox" id="checkbox_0" rel="0" onClick="checkSameRel(this);" /> <label for="checkbox_0">管理首页</label></td>
+                                <td><input type="checkbox" id="checkbox_1" rel="1" onClick="checkSameRel(this);" /> <label for="checkbox_1">新闻/评测/攻略</label></td>
+                                <td><input type="checkbox" id="checkbox_2" rel="2" onClick="checkSameRel(this);" /> <label for="checkbox_2">乐疯管理</label></td>
+                                <td><input type="checkbox" id="checkbox_3" rel="3" onClick="checkSameRel(this);" /> <label for="checkbox_3">动漫管理</label></td>
+                                <td><input type="checkbox" id="checkbox_4" rel="4" onClick="checkSameRel(this);" /> <label for="checkbox_4">系统管理</label></td> -->
+                            </tr>
+                        </table>
+                </div>
+                <script type="text/javascript">
+                	var checkSameRel = function(ele){
+						$(".table-font").find("input[rel='"+$(ele).attr("rel")+"']").each(function(i){
+							this.checked = ele.checked;
+						});
+					}
+                </script>
+                <!-- <div class="box-content" style="display: none;">
+                    <table class="table-font" style="width:1000px;" id="js_item_table">
+                        <tr>
+	                        <td><label><input rel="0" name="auth[]" type="checkbox" id="checkbox_0" value="Upload_index" <{if $auth.Upload_index}> checked <{/if}> />公共上传</label></td>
+	                        <td><label><input rel="1" name="auth[]" type="checkbox" id="checkbox_1" value="GameNews_index" <{if $auth.GameNews_index}> checked <{/if}> />内容管理</label></td>
+	                        <td><label><input rel="2" name="auth[]" type="checkbox" id="checkbox_2" value="SinaContent_index" <{if $auth.SinaContent_index}> checked <{/if}> />图文管理</label></td>
+	                        <td><label><input rel="3" name="auth[]" type="checkbox" id="checkbox_3" value="MeinvContent_index" <{if $auth.MeinvContent_index}> checked <{/if}> />视频管理</label></td>
+                            <td><input rel="4" name="auth[]" type="checkbox" id="checkbox_4" value="Member_index" <{if $auth.Member_index}> checked <{/if}> />系统管理</td>
+                        </tr>
+                        <tr>
+                        		<td>
+                        		<input name="auth[]" type="hidden" value="message_index" />
+                        		<input name="auth[]" type="hidden" value="index_menu" />
+                        		<input name="auth[]" type="hidden" value="index_header" />
+                        		<input name="auth[]" type="hidden" value="index_welcome" />
+                        		<input name="auth[]" type="hidden" value="index_index" />
+                        		</td>
+                        	<td></td>
+                        	<td><label><input rel="2" name="auth[]" type="checkbox" id="checkbox_2" value="CartoonContent_index" <{if $auth.CartoonContent_index}> checked <{/if}> />视频管理</label></td>
+                        	<td></td>
+                        	<td></td>
+                        </tr>
+                    </table>
+                </div> -->
+                <div class="box-footer">
+                    <div class="box-footer-inner">
+                    	<input type="submit" value="确定" /> 或 <a href="<{$sys.goback}>">取消</a>
+                      <input name="step" type="hidden" id="step" value="2">
+                      <input name="name" type="hidden" id="name" value="<{$data.user_name}>">
+                    </div>
+                </div>
+                </form>
+            </div><!--/ con-->
+            
+            
+            
+        </div>    
+    </div><!--/ container-->
+
+</div>
+<{include file='Login/footer.html'}>

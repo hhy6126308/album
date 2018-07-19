@@ -1,0 +1,169 @@
+<{include file='Login/header.html'}>
+<style>
+body{height: 100%;}
+.wrap{background: #ebedf3;padding-bottom: 56px;padding-top: 21px;padding-left: 21px;padding-right: 21px;}
+.searchtxt{width:50px;}
+.searchbtn{width:35px;}
+.fl{float: left;color: #333333;font-size: 22px;font-family: "微软雅黑";padding-left: 20px;}
+.rl{float: right;width: 102px;height: 40px;line-height: 40px;text-align: center;background: #0398FF;margin-top: 4px;border-radius: 2px;margin-right: 10px;}
+#conHeader{overflow: hidden;border-bottom: 1px solid #dee0e5;background: #f2f4f7;border-top: 1px solid #FFFFFF;line-height: 48px;height: 48px;}
+#conHeader .fl{width: 800px;}
+/*#conHeader .btn a:hover,#conHeader .btn a:active{background: #4e9ad4;color: #fff;padding:10px;text-decoration:none;margin-right: 20px;}*/
+#conHeader .btn a{font-size: 14px;font-family: "微软雅黑","Microsoft Yahei";background: #0398FF;color: #FFFFFF;}
+.container{display: inline-block;width: 100%; box-shadow:  0 0 5px rgba(0,0,0,0.15);}
+div.table tr{height: 40px;background: #FFFFFF;}
+div.table .admin-tb th{background: #F2F4F7;border-right-color: #DEE0E5;border-top: 1px solid #FFFFFF;color: #777777;}
+.admin-tb  tr:hover { background-color:#f2f8ff;}
+.admin-tb tr:hover,.admin-tb tr.hover { background-color:#f2f8ff;}
+.tr_hover{border-left: 3px solid #FFFFFF!important;}
+.tr_hover:hover{border-left-color: #0398FF!important;}
+
+
+.banner_img{width: 226.6px;position: relative;}
+.banner_img .upload_btn{position: absolute;top:40px;background: rgba(0,0,0,.6);width: 226.6px;color:#fff;text-align: center;font-size: 20px;cursor: pointer;}
+.banner_img div{width: 226.6px;height:98.3px;margin: 0 auto;border: 1px solid #DEE0E5;}
+.banner_img div img{width: 226.6px;height:98.3px;}
+.bannerlist .banner_action{padding-top: 40px;}
+.bannerlist .show{display: block;}
+.bannerlist .edit{display: none;}
+.bannerlist.editing .show{display: none;}
+.bannerlist.editing .edit{display: block;}
+input[type=text]{width: 200px;height: 30px;}
+</style>
+<div class="wrap">
+    <div class="container">
+        <div id="conHeader">
+            <h1 class="fl" style="width: 600px;">首页推荐图</h1>
+        </div>
+		<!--////////////////////////////////-->
+		<div style="height: 30px;line-height: 30px;border-top: 1px solid #DEE0E5;border-bottom: 1px solid #DEE0E5;background: #F2F4F7;">
+			<div style="border-top: 1px solid #FFFFFF;font-size: 12px;padding-left: 10px;color: #777777;">
+				数量:<{$count}>
+			</div>
+		</div>
+        <div id="main" >
+            <div class="con">
+                <div class="table">
+                        <table class="admin-tb" id="js_data_source" style="border: none;">
+                            <tr style="border-top: 1px solid #DEE0E5;">
+                                <th style="text-align:left;max-winth;187.5px;min-winth;187.5px;">banner图</th>
+                                <th style="text-align:left;max-winth;240px;min-winth;240px;width:240px;">名称</th>
+                                <th style="text-align:left;">跳转地址</th>
+                                <th style="text-align:left;">排序</th>
+                                <th style="text-align:left;width:100px;">操作</th>
+                            </tr>
+                            <{foreach from=$list item=li key=lk}>
+                            <tr class="tr_hover bannerlist" id="banner<{$li.id}>" >
+                                <form action="?s=banner&a=info&ac=edit&id=<{$li.id}>" id="banner_form_<{$li.id}>" method="post">
+                                <td class="hover banner_img" style="text-align:left;">
+                                    <div>
+                                        <img src="<{$li.img}>" alt="">
+                                        <input type="hidden" name="img" value="<{$li.img}>">
+                                        <p class="kUpload upload_btn edit">编辑图片</p>
+                                    </div>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p class="show"><{$li.title}></p>
+                                    <p class="edit"><input type="text" name="title" value="<{$li.title}>"></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p class="show"><{$li.url}></p>
+                                    <p class="edit"><input type="text" name="url" value="<{$li.url}>"></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p class="show"><{$li.orderid}></p>
+                                    <p class="edit"><input type="text" name="orderid" value="<{$li.orderid}>"></p>
+                                </td>
+                                <td style="text-align:left;white-space: nowrap;">
+                                    <div class="show">
+                                        <a href="javascript:edit_banner(<{$li.id}>)">编辑</a>　<a href="javascript:del_banner(<{$li.id}>)">删除</a>
+                                    </div>
+                                    <div class="edit">
+                                        <a href="javascript:save_banner(<{$li.id}>)">保存</a>　<a href="javascript:edit_cancel_banner(<{$li.id}>)">取消</a>
+                                    </div>
+                                </td>
+                                </form>
+                            </tr>
+                            <{/foreach}>
+                            <tr class="tr_hover bannerlist" id="banner<{$li.id}>" >
+                                <form action="?s=banner&a=info&ac=add" id="banner_add_form" method="post">
+                                <td class="hover banner_img" style="text-align:left;">
+                                    <div>
+                                        <img src="" alt="">
+                                        <input type="hidden" name="img" value="">
+                                        <p class="kUpload upload_btn">添加图片</p>
+                                    </div>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p ><input type="text" name="title" placeholder="输入名称" value=""></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p ><input type="text" name="url" placeholder="输入跳转链接" value=""></p>
+                                </td>
+                                <td style="text-align:left;">
+                                    <p ><input type="text" name="orderid" placeholder="输入排序权重（越大越靠前）" value=""></p>
+                                </td>
+                                <td style="text-align:left;white-space: nowrap;">
+                                    <div >
+                                        <a href="javascript:add_banner()">添加</a>
+                                    </div>
+                                </td>
+                                </form>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                添加推荐图方法：1、点击“添加图片”并选择要上传的图片，2、调整图片大小尺寸，并确认上传，3、输入焦点图和描述和跳转链接，4、点击添加<br>
+                                修改推荐图方法：1、点击链接后的"编辑"，2、修改相信的内容，3.点击保存<br>
+                                </td>
+                            </tr>
+                        </table>
+                </div>
+                </form>
+            </div>
+        </div><!--/ con-->
+    </div>
+        <div class="th">
+        <{if $page}>
+        <div class="pages">
+            <{$page}>
+        </div>
+        <{/if}>
+    </div>
+</div><!--/ container-->
+</div><!--/ wrap-->
+<script>
+function edit_banner(id){
+    $("#banner"+id).addClass("editing");
+}
+function edit_cancel_banner(id){
+    $("#banner"+id).removeClass("editing");
+}
+function save_banner(id){
+    $("#banner_form_"+id).submit();
+    $("#banner"+id).removeClass("editing");
+}
+function del_banner(id){
+    if(confirm("确认删除？")){
+        window.location.href = "?s=Banner&a=info&ac=del&id="+id;
+    }  
+}
+function add_banner(){
+    $("#banner_add_form").submit();
+}
+</script>
+<script>
+function setFile(imgsrc){
+    //obj.next("label").find("input").val(imgsrc);
+    obj.prev("input").val(imgsrc).prev("img").attr("src",imgsrc);
+    //obj.prev("input").val(url).prev("img").attr("src",url);
+    obj="";
+}
+$(".kUpload").live('click',function(){
+    obj=$(this);
+    var w = '680';
+    var h = '295';
+    //mainsailsimg(750,350);
+    window.open("./?s=Upload&a=mainsails&w=" + w + "&h="+h+"", "newwindow", "height=560, width=800, toolbar=no, menubar=yes, scrollbars=yes,top=100px,left=240px, resizable=no, location=no, status=no") //写成一行
+});
+</script>
+<{include file='Login/footer.html'}>

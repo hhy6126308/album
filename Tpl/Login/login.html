@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>登录</title>
+<style type="text/css">
+	html{height: 100%;}
+	body,h1,form,ul,li,p { margin:0; padding:0;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+    li { list-style:none; line-height:35px; height:35px; margin-top:10px;position: relative;}
+    li:after{content: "";position: absolute;width: 100%;bottom: 0;left: 0;height: 1px;background: #e6e6e6;}
+    ul>li:last-child:after{display: none;}
+    /*ul { padding:0 0 15px 30px;}*/
+    body { font:12px/1.5 Tahoma, Geneva, sans-serif; background:#F3F6EA;}
+    body{background: url(./static/images/login_bg.jpg) no-repeat;background-size: 100% 100%;}
+	#admin { width:600px;background:#FFFFFF; position:fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);-moz-transform: translate(-50%,-50%);-ms-transform: translate(-50%,-50%);}
+    h1 { height:66px; overflow:hidden; background:#559CD1; }
+    ul{position: relative;width: 214px;margin: 0 auto;margin-top: 60px;}
+    .int { border: none;outline: none;height: 20px;border-color:#666 #E8F1C2 #E8F1C2 #666; width:168px; font-family:Tahoma, Geneva, sans-serif;font-size: 14px;}
+    .int:focus { background:#fff;}
+    .btn { width:120px; height:40px; margin:0 auto; display:block; position:relative; border:none; padding:0; overflow:hidden;background: #0398FF;color: #FFFFFF; cursor:pointer;font-size: 16px;border-radius: 2px;}
+    .sms_btn { width:120px; height:33px; border:none; overflow:hidden; cursor:pointer;}
+    .sms_btn_bg{background:#BDEBEC;
+     background: -webkit-linear-gradient( top,#BDEBEC,#22CFDD);
+ background: -moz-linear-gradient( top,#BDEBEC,#22CFDD);
+background: -ms-linear-gradient( top,#BDEBEC,#22CFDD);
+background: -o-linear-gradient( top,#BDEBEC,#22CFDD);
+background: linear-gradient( top,#BDEBEC,#22CFDD);}
+    label { float:left; height:30px; line-height:30px; text-align:right; padding-right:18px;}
+    /*#message { background:url(./static/images/infor-ico.gif) no-repeat 10px center #FFF8CC; width:342px; border:1px solid #FFEB69; color:#7D5018; position:absolute; bottom:-50px; left:-1px; height:40px; line-height:40px;}*/
+   #message{position: absolute;font-family: "微软雅黑";font-size: 12px;color: #f83737;margin-top: 6px;line-height: 14px;height: 14px;}
+   #message:after{display: none;} 
+    /*p.error { padding: 0 10px; text-align:center;}*/
+</style>
+<script type="text/javascript" src="static/js/jquery-1.3.2.min.js"></script>
+<script type="text/javascript">
+	if(self!=top){top.location=self.location;}
+    var coding_time = 60;
+    var iscoding = false;
+    var timeout;
+    function timing(e){
+        if(coding_time<=0){
+            clearTimeout(timeout);
+            e.addClass('sms_btn_bg').val("发送验证码到手机");
+            coding_time = 60 ;
+            iscoding = false;
+        }else{
+            coding_time = coding_time-1;
+            e.val("("+coding_time+")后重新获取");
+            timeout = setTimeout(function(){
+                timing(e);
+            },1000);
+        }
+    }
+$(window).load(function(){
+    $('#sms_code').click(function(){
+        var _this = $(this);
+        if(iscoding) return ; 
+        iscoding = true;
+        var val =  $('#phone').val();
+        if(!val || !/^1[0-9][0-9]\d{4,8}$/.test(val)) {
+            alert("请输入正确的手机号！");
+            iscoding = false;
+            return false;
+        }
+        $.getJSON("?s=login&a=phoneverify&phone="+val,function(data){
+            if(data.error==0){
+                _this.removeClass('sms_btn_bg').val("("+coding_time+")后重新获取");
+                timeout = setTimeout(function(){timing(_this);},1000);
+            }else{
+                alert(data.msg);
+                iscoding = false;
+                return false;
+            }
+        })
+        
+    });
+});    
+</script>
+</head>
+
+<body style="width: 100%;height: 100%;">
+
+<div id="admin">
+	<div style="float: left;width: 342px;height: 400px;background: url(./static/images/land_bg.jpg?v=1.0) no-repeat;background-size: 100% 100%;">
+		
+	</div>
+	<div style="float: left;width: 257px;">
+		<div style="overflow: hidden;padding-top: 13px;">
+			<div style="width: 100px;height: 50px;background: url(./static/images/zu_login_logo.png) no-repeat;background-size: 100% 100%;margin: 0 auto;"></div>
+			<!--<div style="float: left;width: 1px;height: 16px;background: #CCCCCC;margin-top: 8px;"></div>-->
+			<div style="font-size: 16px;text-align: center; font-family: '微软雅黑';margin-top: 14px;font-weight: bold;text-align: center;color: #555555;line-height: 16px;">运营管理中心</div>
+		</div>
+		<{if $Safetyip ==1}>
+		    <form action="?s=login&a=login" method="post" >
+		        <ul>
+		            <li>
+		                <label for="user_name"><span style="display: inline-block;margin-top: 9px;width: 16px;height: 16px;background: url(./static/images/user_img.png?v=1.0) no-repeat;background-size: 100%;"></span></label>
+		                <input name="user_name" type="text" placeholder="请输入用户名" class="int" id="user_name" value="" />
+		            </li>
+		            <li style="margin-top: 29px;">
+		                <label for="password"><span style="display: inline-block;margin-top: 9px;width: 16px;height: 16px;background: url(./static/images/password_img.png?v=1.0) no-repeat;background-size: 100%;"></span></label> 
+		                <input name="password" type="password" placeholder="请输入密码" class="int" id="password" />
+		            </li>
+					<{if $error}>   
+					    <li id="message">
+					        <{$error}>
+					    </li>
+					<{/if}>
+		            <li style="margin-top: 47px;"><input type="submit" value="登录" class="btn" /></li>
+		        </ul>
+		    </form>
+		<{else if}>
+		    <form action="?s=login&a=phone_login" method="post" >
+		        <ul>
+		            <li>
+		                <label for="phone_num">手机号：</label>
+		                <input name="phone_num" type="text" class="int" id="phone" value="" />
+		            </li>
+		            <li>
+		                <label for="capa">验证码：</label>            
+		                <input name="capa" type="text" class="int" id="capa" style="width:65px; margin-right:5px;"  />
+		                <!-- <img id="securimage" title="securimage" align="absmiddle" style="cursor: pointer; " src='?s=login&a=verify&date="+Date.parse(new Date())";' onclick="this.src='/?s=login&a=verify&date='+Date.parse(new Date());"/> -->
+		                <input type="button" value="手机获取验证码" class="sms_btn sms_btn_bg" id="sms_code" />
+		            </li>
+		            <li><input type="submit" value="提　交" class="btn" /></li>
+		        </ul>
+		    </form>
+		<{/if}>
+	</div>
+	<div style="width: 600px;height: 61px;position: absolute;bottom: -61px;left: 0px;background: url(./static/images/shadow.png) no-repeat;"></div>
+</div>
+</body>
+</html>

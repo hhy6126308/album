@@ -1,0 +1,119 @@
+<div class="row-content am-cf">
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">
+                        <{$ac=='add'?'添加相册':"编辑相册:{$info['album_name']}"}>
+                        <ol class="am-breadcrumb" style="float: right">
+                            <li><a href="#" class="am-icon-home">首页</a></li>
+                            <foreach name="npc" item="vo" >
+                                <li><a href="<{$vo.url}>"><{$vo.name}></a></li>
+                            </foreach>     
+                        </ol>
+                    </div>
+                </div>
+                <div class="widget-body am-fr">
+                    <form class="am-form tpl-form-border-form tpl-form-border-br" action='' method="post">
+                        <div class="am-form-group">
+                            <label for="" class="am-u-sm-3 am-form-label">相册名 <span class="tpl-form-line-small-title">Title</span></label>
+                            <div class="am-u-sm-9">
+                                <input type="text" placeholder="输入相册名称" name="album_name"  value="<{$info.album_name}>">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-weibo" class="am-u-sm-3 am-form-label">相册Banner <span class="tpl-form-line-small-title">Images</span></label>
+                            <div class="am-u-sm-9">
+                                <div class="am-form-group am-form-file">
+                                    <div class="tpl-form-file-img wx-img-lg">
+                                        <img src="<{$savePicUrl}><{$info.album_banner}>" alt="">
+                                        <input type="hidden" name='album_banner' value="<{$savePicUrl}><{$info.album_banner}>">
+                                    </div>
+                                    <button type="button" class="am-btn am-btn-danger am-btn-sm j-upload-img" data-h='476' data-w='750'>
+                                    <i class="am-icon-cloud-upload"></i>添加列表大图</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="user-weibo" class="am-u-sm-3 am-form-label">相册启动图 <span class="tpl-form-line-small-title">Images</span></label>
+                            <div class="am-u-sm-9">
+                                <div class="am-form-group am-form-file">
+                                    <div class="tpl-form-file-img wx-img-sg">
+                                        <img src="<{$savePicUrl}><{$info.album_index}>" alt="" style="width:100%;height:100%;">
+                                        <input type="hidden" name='album_index' value="<{$savePicUrl}><{$info.album_index}>">
+                                    </div>
+                                    <button type="button" class="am-btn am-btn-danger am-btn-sm j-upload-img" data-h='1334' data-w='750'>
+                                        <i class="am-icon-cloud-upload"></i>添加列表大图</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">相册简介</label>
+                            <div class="am-u-sm-9">
+                                <textarea class="" rows="4" name='album_des' id="user-intro" placeholder="请输入相册简介"><{$info.album_des}></textarea>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <input type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success " value="提交" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(function() {
+    var $dpInput = $('.form-datetime').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii'
+    });
+});
+</script>
+<link href="/static/baidu/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/static/baidu/third-party/jquery.min.js"></script>
+<script type="text/javascript" src="/static/baidu/third-party/template.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/static/baidu/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/static/baidu/umeditor.min.js"></script>
+<script type="text/javascript" src="/static/baidu/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+//实例化编辑器
+var um = UM.getEditor('myEditor');
+var obj = '';
+function setFile(imgsrc){
+    obj.prev("div").find("input").val(imgsrc);
+    obj.prev("div").find("img").attr("src",imgsrc);
+    obj="";
+}
+
+$('body').on('click', ".j-upload-img", function(){
+    obj = $(this);
+    mainsailsimg(obj.attr('data-w'),obj.attr('data-h'));
+});
+
+function mainsailsimg(w,h){
+    if(w==''){
+        w="100";//裁剪和保存的宽
+    }
+    if(h==''){
+        h="100";//裁剪和保存的高
+    }
+    window.open("/Upload/image?w="+w+"&h="+h, "newwindow", "height=560, width=800, toolbar=no, menubar=yes, scrollbars=yes,top=100px,left=240px, resizable=no, location=no, status=no") //写成一行
+}
+
+$('body').on('click', '.am-close', function () {
+    $(this).parent().remove();
+})
+$('.j-add-banner').on('click', function () {
+    $('<li class="am-thumbnail wx-img-lg">\
+        <div class="tpl-form-file-img ">\
+                <img src="w" alt="">\
+                <input type="hidden" name="g_banners[]" value="">\
+            </div>\
+            <button type="button" class="j-upload-img" data-h="476" data-w="750">+</button>\
+            <i class="am-close am-close-alt am-close-spin am-icon-times"></i>\
+     </li>').appendTo($("#j-banner-lists"));
+});
+</script>

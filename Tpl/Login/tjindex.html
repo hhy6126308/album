@@ -1,0 +1,66 @@
+<{include file='Login/header.html'}>
+<script>
+/* var tjdata={
+"nt_pc":{"title":"闹ta电脑页","w":{"index":"首页"}},
+"nt_m":{"title":"闹ta手机页","w":{"index":"首页"}}
+}; */
+var tjdata=<{$TjSignData}>;
+
+$(function(){
+	if(tjdata){
+		var domhtml="<option value=''>选择</option>";
+		for(i in tjdata){
+			domhtml	+= "<option value='"+i+"'>"+tjdata[i].title+"</option>"
+		}
+		$('#dom').html(domhtml);
+	}
+	$('#dom').change(function(){
+		var v	= $(this).val();
+		if(v==""){
+			return false;
+		}
+		var w	= tjdata[v].w;
+		var whtml	="<option value=''>选择</option>";
+		for(i in w){
+			whtml	+= "<option value='"+i+"'>"+w[i]+"</option>"
+		}
+		$('#w').html(whtml);
+	});
+	$("#w").change(function(){
+		var $dv	= $('#dom').val();
+		var $wv	= $('#w').val();
+		var url	= './?s=Managetj&a=du&dom='+$dv+"&w="+$wv+"&title="+tjdata[$dv].title+"&wtitle="+tjdata[$dv].w[$wv];
+		if($dv!='' && $wv!=''){
+			window.open(url);
+		}
+	});
+});
+</script>
+<div class="wrap">
+            <div class="con box-green">
+                <div class="box-header">
+                    <h4>数据统计</h4>
+                </div>
+                <div class="box-content">
+                    <table class="table-font">
+                        <tr>
+                            <td>
+                               	分类
+                            </td>
+                            <td>
+                               <select id="dom"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               	位置
+                            </td>
+                            <td>
+                               <select id="w"><option value=''>选择</option></select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div><!--/ con-->
+    </div><!--/ wrap-->
+<{include file='Login/footer.html'}>
