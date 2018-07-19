@@ -6,8 +6,9 @@ class UploadController extends BaseController {
 
     public function _initialize(){
         $this->checkAuth();
-        $this->SAVE_PATH    = APP_PATH . "../public";
         $this->SAVE_URL     = C('SavePicUrl');
+        $this->SAVE_PIC_PATH    = C('SavePicPath');
+        $this->SAVE_TEMP_PATH    = C('SaveTempPath');
     }
 
     public function image () {
@@ -34,28 +35,21 @@ class UploadController extends BaseController {
                 exit;
             }
             //文件保存目录路径
-            $save_path = $this->SAVE_PATH;
+            $save_path = $this->SAVE_PIC_PATH;
             //文件保存目录URL
             $save_url = $this->SAVE_URL;
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
             $save_path = realpath($save_path).'/';
-            $dir_name='image';
-            //创建文件夹
-            if ($dir_name !== '') {
-                $save_path .= $dir_name . "/";
-                //$save_url .= $dir_name . "/";
-                if (!file_exists($save_path)) {
-                    mkdir($save_path);
-                }
-            }
+
             $ymd = date("Ymd");
             $save_path .= $ymd . "/";
-            $save_url .= '/image/'.$ymd . "/";
+            $save_url .= '/'.$ymd . "/";
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
+
             //新文件名
             $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $type;
             //移动文件
@@ -202,25 +196,16 @@ class UploadController extends BaseController {
                 exit;
             }
             //文件保存目录路径
-            $save_path = $this->SAVE_PATH;
+            $save_path = $this->SAVE_PIC_PATH;
             //文件保存目录URL
             $save_url = $this->SAVE_URL;
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
-            $save_path = realpath($save_path);
-            $dir_name='image';
-            //创建文件夹
-            if ($dir_name !== '') {
-                $save_path .= $dir_name . "/";
-                //$save_url .= $dir_name . "/";
-                if (!file_exists($save_path)) {
-                    mkdir($save_path);
-                }
-            }
+            $save_path = realpath($save_path) . '/';
             $ymd = date("Ymd");
             $save_path .= $ymd . "/";
-            $save_url .= '/image/'.$ymd . "/";
+            $save_url .= '/'.$ymd . "/";
             if (!file_exists($save_path)) {
                 mkdir($save_path);
             }
@@ -288,24 +273,29 @@ class UploadController extends BaseController {
 
         // Settings
         // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $targetDir = APP_PATH . "/Runtime/Temp";
-        $imgUrl = '/image/'. date('Ymd') . '/' . $album_id;
-        $uploadDir = $this->SAVE_PATH . $imgUrl;
-
-        $cleanupTargetDir = true; // Remove old files
-        $maxFileAge = 5 * 3600; // Temp file age in seconds
-
-
+        $targetDir = $this->SAVE_TEMP_PATH;
         // Create target dir
         if (!file_exists($targetDir)) {
             @mkdir($targetDir);
         }
 
-        // Create target dir
+        $imgUrl = '/'. date('Ymd') . '/' . $album_id;
+        $uploadDir = $this->SAVE_PIC_PATH . '/'. date('Ymd') ;
+        // Create upload dir
         if (!file_exists($uploadDir)) {
             @mkdir($uploadDir);
         }
+        $uploadDir = $uploadDir . '/' . $album_id . '/';
+        // Create upload dir
+        if (!file_exists($uploadDir)) {
+            @mkdir($uploadDir);
+        }
+
+        $cleanupTargetDir = true; // Remove old files
+        $maxFileAge = 5 * 3600; // Temp file age in seconds
+
         $uploadDir = realpath($uploadDir) . '/';
+
         // Get a file name
         if (isset($_REQUEST["name"])) {
             $fileName = $_REQUEST["name"];
@@ -389,6 +379,7 @@ class UploadController extends BaseController {
                 break;
             }
         }
+
         if ( $done ) {
             if (!$out = @fopen($uploadPath, "wb")) {
                 die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');

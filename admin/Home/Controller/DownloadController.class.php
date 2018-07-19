@@ -5,7 +5,8 @@ use \Home\Model\ImgModel;
 class DownloadController extends BaseController {
 
     public function _initialize(){
-        $this->SAVE_PATH    = APP_PATH . "../public";
+        $this->SAVE_PIC_PATH    = C('SavePicPath');
+        $this->SAVE_TEMP_PATH    = C('SaveTempPath');
     }
 
     public function index()
@@ -19,14 +20,14 @@ class DownloadController extends BaseController {
             $M = new ImgModel();
             $images = $M->where(['id' => ['in', $ids]])->select();
             $fileNames = array_column($images, 'img_url');
-            $tmpPath = APP_PATH . "/Runtime/Temp/".rand(10000, 99999).'.zip';
+            $tmpPath = $this->SAVE_TEMP_PATH."/".rand(10000, 99999).'.zip';
             if(file_exists($tmpPath)){
                 unlink($tmpPath);
             }
             $zip = new \ZipArchive();
             if($zip->open($tmpPath, \ZipArchive::CREATE)=== TRUE){
                 foreach ($fileNames as $fileName){
-                    $file = $this->SAVE_PATH . $fileName;
+                    $file = $this->SAVE_PIC_PATH . $fileName;
                     if(is_file($file)){
                         $file_info_arr= pathinfo($file);
                         $zip->addFile($file, $file_info_arr['basename']);
@@ -41,7 +42,7 @@ class DownloadController extends BaseController {
             #header("Content-Type: application/force-download");
             #header("Content-Transfer-Encoding: binary");
             header('Content-Type: application/zip');
-            header('Content-Disposition: attachment; filename='.$album_id.'.zip');
+            header('Content-Disposition: attachment; filename='.$album_id.'_'.rand(10000, 99999).'.zip');
             header("Accept-Ranges: bytes");
             #header('Content-Length: '.filesize($filename));
             error_reporting(0);

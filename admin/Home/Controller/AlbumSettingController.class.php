@@ -12,7 +12,6 @@ class AlbumSettingController extends BaseController {
     public function _initialize () {
         layout("Comon/layout");
         $this->checkAuth();
-        session('SESSION_HISTORYURL', '/AlbumSetting');
         $this->assign('sidebar_name','album_setting');
     }
 

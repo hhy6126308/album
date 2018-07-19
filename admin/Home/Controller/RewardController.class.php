@@ -14,7 +14,6 @@ class RewardController extends BaseController
     {
         layout("Comon/layout");
         $this->checkAuth();
-        session('SESSION_HISTORYURL', '/Reward');
         $this->assign('sidebar_name', 'reward');
     }
 

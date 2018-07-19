@@ -3,6 +3,7 @@ namespace Home\Controller;
 
 use \Home\Model\AlbumModel;
 use \Home\Model\ImgModel;
+use Home\Model\RedisModel;
 
 class AlbumController extends BaseController {
 
@@ -10,14 +11,13 @@ class AlbumController extends BaseController {
     {
         $token = safe_string($_GET['token']);
         $album_name = safe_string($_GET['album_name']);
-        //校验token
-        $redisM = new \RedisModel();
+        $redisM = new RedisModel();
         if($redisM->exists($token) == 0){
             $rs['error'] = 304;
             $rs['msg'] = '用户未登录';
             $this->out_put($rs);
         }
-        
+
         $M = new AlbumModel;
         $where = "1=1";
         if ($album_name) {

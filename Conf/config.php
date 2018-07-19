@@ -23,7 +23,12 @@ return array(
 
 	/*缓存相关*/
 	'DB_CACHE'         => false,//cache开关
-	'DATA_CACHE_TYPE'  => "Memcache",
+	/*redis*/
+	'DATA_CACHE_TYPE'  => "Redis",
+	'REDIS_HOST'=>"127.0.0.1",
+	'REDIS_PORT'=>"6379",
+	'REDIS_AUTH'=>'',
+
 	'MEMCACHE_HOST'    => '127.0.0.1',
 	'MEMCACHE_PORT'    => '11211',
 	'MEMCACHE_API_HOST'=>"192.168.5.81",

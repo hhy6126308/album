@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+use Home\Model\RedisModel;
 
 class BaseController extends Controller {
 
@@ -19,7 +20,7 @@ class BaseController extends Controller {
             $this->out_put(array("error"=>304,"msg"=>"用户未登录","data"=>""));
         }
 
-        $redisM = new \RedisModel();
+        $redisM = new RedisModel();
         $sessionStr = $redisM->hget("ZXHY_XCX_RDSESSION",$rd_session);
         $sesion_json = json_decode($sessionStr,true);
         if($sesion_json['openid']){

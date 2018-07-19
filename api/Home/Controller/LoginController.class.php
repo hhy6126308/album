@@ -3,6 +3,7 @@ namespace Home\Controller;
 
 use Home\Model\UserModel;
 use Home\Model\UserSocialModel;
+use Home\Model\RedisModel;
 
 class LoginController extends BaseController {
 
@@ -30,7 +31,7 @@ class LoginController extends BaseController {
             $rs['msg'] = $WXres['errmsg'];
             $this->out_put($rs);
         }
-        $redisM = new \RedisModel();
+        $redisM = new RedisModel();
         $rd_session = exec('head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168');
         if($rd_session && $redisM->hset("ZXHY_XCX_RDSESSION",$rd_session,json_encode($WXres))){
             //新建用户
@@ -76,7 +77,7 @@ class LoginController extends BaseController {
                     //过滤密码
                     unset($user['login_pwd']);
                     //设置token
-                    $redisM = new \RedisModel();
+                    $redisM = new RedisModel();
                     $token = md5('token_'.$user);
                     if($redisM->exists($token) == 0){
                         $redisM->setex($token, $this->tokenTimeout);

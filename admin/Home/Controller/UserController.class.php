@@ -12,7 +12,6 @@ class UserController extends BaseController {
     public function _initialize () {
         layout("Comon/layout");
         $this->checkAuth();
-        session('SESSION_HISTORYURL', '/User');
     }
 
     public function index()

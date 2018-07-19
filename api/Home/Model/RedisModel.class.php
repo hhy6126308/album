@@ -1,4 +1,5 @@
 <?php
+namespace Home\Model;
 class RedisModel{
 	private   $redis = null;
 	private $CMD = array('del',
@@ -137,7 +138,7 @@ class RedisModel{
 'select');
 	public function __construct($host="",$port=""){
 		//连接本地的 Redis 服务
-		$this->redis = new Redis();
+		$this->redis = new \Redis();
 		$host	= empty($host)?C("REDIS_HOST"):$host;
 		$port	= empty($port)?C("REDIS_PORT"):$port;
 		$port	= !empty($port)?$port:'6379';

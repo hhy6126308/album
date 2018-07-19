@@ -11,7 +11,6 @@ class BaseController extends Controller {
     */
     protected function checkAuth () {
         if (!session("ADMIN_AUTHID")) {
-            session("SESSION_HISTORYURL",$_SERVER['REQUEST_URI']);
             redirect ( '/Login' );
         }
     }
