@@ -45,11 +45,25 @@ class PayNotifyCallBack extends WxPayNotify
 		}
 		$orderid = $data["attach"];
 		$pay = $data["total_fee"];
+		//update order
 		$OM = new \Home\Model\OrderModel();
-		$orderData['pay_type'] = '微信支付';
+		$order = $OM->where("order_id='{$orderid}'")->find();
+		$orderUpdateData['pay_type'] = '微信支付';
 		$orderUpdateData['pay_time'] = date("Y-m-d H:i:s");
 		$orderUpdateData['order_status'] = 2;
-		if($OM->where("id='{$orderid}'")->save($orderUpdateData)){
+		if($OM->where("order_id='{$orderid}'")->save($orderUpdateData)){
+			//add reward
+			$rewardM = new \Home\Model\RewardModel();
+			$rewardData['order_id'] = $orderid;
+			$rewardData['img_id'] = $order['img_id'];
+			$rewardData['album_id'] = $order['album_id'];
+			$rewardData['reward_amount'] = $order['amount'];
+			$rewardData['user_social_id'] = $order['user_social_id'];
+			$rewardData['create_time'] = date("Y-m-d H:i:s");
+			if(false === $rewardM->add($rewardData)){
+				$msg = "打赏记录创建失败";
+				return false;
+			}
 			return true;
 		}
 		$msg = "订单状态更新失败";

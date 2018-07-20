@@ -24,7 +24,8 @@ class PayController extends BaseController {
             $this->out_put($rs);
         }
         //get img
-        $image = (new ImgModel())->where("id=$img_id")->find();
+        $imageModel = new ImgModel();
+        $image = $imageModel->where("id=$img_id")->find();
         if(empty($image)){
             $rs['error'] = 1;
             $rs['msg'] = "相片不存在！";
@@ -45,10 +46,12 @@ class PayController extends BaseController {
         //create order
         $orderM = new OrderModel();
         $orderData['order_id'] = $this->getUid();
+        $orderData['img_id'] = $img_id;
+        $orderData['album_id'] = $image['album_id'];
         $orderData['order_status'] = 1;
         $orderData['amount'] = $amount;
         $orderData['remark'] = '打赏';
-        $orderData['user_social_id'] = $user['user_social_id'];
+        $orderData['user_social_id'] = $user['id'];
         $orderData['create_time'] = date("Y-m-d H:i:s");
 
         if(false === $orderM->add($orderData)){
@@ -63,21 +66,6 @@ class PayController extends BaseController {
         if(empty($jsApiParameters)){
             $rs['error'] = 1;
             $rs['msg'] = "支付失败！";
-            $this->out_put($rs);
-        }
-
-        //add reward
-        $rewardM = new RewardModel();
-        $rewardData['order_id'] = $orderData['order_id'];
-        $rewardData['img_id'] = $img_id;
-        $rewardData['album_id'] = $image['album_id'];
-        $rewardData['album_id'] = $image['album_id'];
-        $rewardData['reward_amount'] = $amount;
-        $rewardData['user_social_id'] = $user['user_social_id'];
-        $rewardData['create_time'] = date("Y-m-d H:i:s");
-        if(false === $rewardM->add($rewardData)){
-            $rs['error'] = 1;
-            $rs['msg'] = "打赏记录创建失败！";
             $this->out_put($rs);
         }
 

@@ -49,7 +49,8 @@ class AlbumController extends BaseController {
         $image = new ImgModel();
         $rs['error'] = 0;
         $rs['msg'] = 'ok';
-        $rs['data'] = $image->where("album_id=$album_id")->order("id desc")->select();
+        $rs['data']['album'] = $info;
+        $rs['data']['images'] = $image->where("album_id=$album_id")->order("id desc")->select();
 
         $this->out_put($rs);
     }
