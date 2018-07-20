@@ -36,7 +36,7 @@ class LoginController extends BaseController {
         if($rd_session && $redisM->hset("ZXHY_XCX_RDSESSION",$rd_session,json_encode($WXres))){
             //新建用户
             $userSocial = new UserSocialModel();
-            $user = $userSocial->where("openid=$openid")->find();
+            $user = $userSocial->where("openid='{$openid}'")->find();
             if(empty($user)){
                 $data['openid'] = $openid;
                 $data['social_type'] = 'weixin';

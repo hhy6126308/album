@@ -283,7 +283,7 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
  * @param bool $info(是否显示头信息,如果返回头信息,则返回结果为数组,否则为字符串)
  * @return mixed||array
  */
-function getData( $url ,$info=false,$referer="",$gzip=false,$data='',$header=array(),$userAgent){
+function getData( $url ,$info=false,$referer="",$gzip=false,$data='',$header=array(),$userAgent = ''){
 	$ch = curl_init();
 	curl_setopt($ch,CURLOPT_URL,$url);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
