@@ -18,6 +18,11 @@ class PayController extends BaseController {
         $openid = $this->getOpenid();
         $img_id = safe_string($_POST['img_id']);
         $amount = safe_string($_POST['amount']);
+        if(!$img_id || !$amount){
+            $rs['error'] = 1;
+            $rs['msg'] = "参数错误！";
+            $this->out_put($rs);
+        }
         //get img
         $image = (new ImgModel())->where("id=$img_id")->find();
         if(empty($image)){
@@ -28,13 +33,13 @@ class PayController extends BaseController {
 
         //get user
         $userSocial = new UserSocialModel();
-        $user = $userSocial->where("openid=$openid")->find();
+        $user = $userSocial->where("openid='{$openid}'")->find();
         if(empty($user)){
             $data['openid'] = $openid;
             $data['social_type'] = 'weixin';
             $data['create_time'] = date("Y-m-d H:i:s");
             $userSocial->add($data);
-            $user = $userSocial->where("openid=$openid")->find();
+            $user = $userSocial->where("openid='{$openid}'")->find();
         }
 
         //create order
@@ -88,7 +93,7 @@ class PayController extends BaseController {
         $id = null;
         do {
             $id = substr(strtoupper(uniqid('', true)), 0, 14);
-            $isUnique = (new UserSocialModel())->where("order_id=$id")->find();
+            $isUnique = (new UserSocialModel())->where("order_id='{$id}'")->find();
         }while(empty($isUnique));
 
         return $id;
