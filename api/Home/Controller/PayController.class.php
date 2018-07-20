@@ -94,7 +94,8 @@ class PayController extends BaseController {
         $id = null;
         do {
             $id = substr(strtoupper(uniqid('', true)), 0, 14);
-            $isUnique = (new OrderModel())->where("order_id='{$id}'")->find();
+            $orderM = new OrderModel();
+            $isUnique = $orderM->where("order_id='{$id}'")->find();
         }while(!empty($isUnique));
 
         return $id;
