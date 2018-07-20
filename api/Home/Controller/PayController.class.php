@@ -50,9 +50,8 @@ class PayController extends BaseController {
         $orderData['remark'] = '打赏';
         $orderData['user_social_id'] = $user['user_social_id'];
         $orderData['create_time'] = date("Y-m-d H:i:s");
-        $orderM->add($orderM);
 
-        if(false === $orderM->add($orderM)){
+        if(false === $orderM->add($orderData)){
             $rs['error'] = 1;
             $rs['msg'] = "订单创建失败！";
             $this->out_put($rs);
