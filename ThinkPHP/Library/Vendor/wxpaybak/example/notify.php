@@ -49,7 +49,7 @@ class PayNotifyCallBack extends WxPayNotify
 		$orderData['pay_type'] = '微信支付';
 		$orderUpdateData['pay_time'] = date("Y-m-d H:i:s");
 		$orderUpdateData['order_status'] = 2;
-		if($OM->where("id=$orderid")->save($orderUpdateData)){
+		if($OM->where("id='{$orderid}'")->save($orderUpdateData)){
 			return true;
 		}
 		$msg = "订单状态更新失败";
