@@ -78,9 +78,9 @@ class LoginController extends BaseController {
                     unset($user['login_pwd']);
                     //设置token
                     $redisM = new RedisModel();
-                    $token = md5('token_'.$user);
+                    $token = md5('token_'.$user['user_id']);
                     if($redisM->exists($token) == 0){
-                        $redisM->setex($token, $this->tokenTimeout);
+                        $redisM->setex($token, $this->tokenTimeout, $user['user_id']);
                     }
                     $user['token'] = $token;
 
