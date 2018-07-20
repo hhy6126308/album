@@ -110,3 +110,17 @@ function getData( $url ,$info=false,$referer="",$gzip=false,$data='',$header=arr
     curl_close($ch);
     return $result;
 }
+
+/**
+ * 日志记录
+ * @param log $str
+ */
+function debug_log($str='')
+{
+    if(MODE_NAME != "cli"){
+        $ip = @get_client_ip();
+    }else{
+        $ip = "cli_running";
+    }
+    @\Think\Log::write($ip."\t".$str,'INFO');
+}

@@ -5,6 +5,8 @@ return array(
     'MODULE_ALLOW_LIST' => array ('Home'),
     'DEFAULT_MODULE' => 'Home',
     'USER_SALT' =>'4%&&*',
+    'LOG_TYPE' => 'File',
+    'LOG_PATH' => APP_PATH.'Runtime/Logs/Common/api/',
 //local
 //    'SavePicUrl' => "http://image.album.com",//图片路径
 //    'SavePicPath' => "/home/vagrant/storage/image",//图片目录

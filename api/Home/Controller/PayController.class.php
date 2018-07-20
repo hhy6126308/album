@@ -60,6 +60,7 @@ class PayController extends BaseController {
         vendor('wxpaybak.example.jsapi');
         $wxpay = new \wxpay();
         $jsApiParameters = $wxpay->getXcxApiParameters($openid, $orderData);
+        debug_log('jsApiParameters'."\n".json_encode($jsApiParameters));
         if(empty($jsApiParameters)){
             $rs['error'] = 1;
             $rs['msg'] = "支付失败！";
@@ -93,13 +94,14 @@ class PayController extends BaseController {
         $id = null;
         do {
             $id = substr(strtoupper(uniqid('', true)), 0, 14);
-            $isUnique = (new UserSocialModel())->where("order_id='{$id}'")->find();
-        }while(empty($isUnique));
+            $isUnique = (new OrderModel())->where("order_id='{$id}'")->find();
+        }while(!empty($isUnique));
 
         return $id;
     }
 
     public function pay_notify(){
+        debug_log('pay_notify'."\n".file_get_contents('php://input'));
         vendor('wxpaybak.example.notify');
     }
 }
