@@ -20,14 +20,19 @@ class AlbumController extends BaseController {
         Vendor('Mypaging.page');
         $M = new AlbumModel;
         $keyword = safe_string($_GET['keyword']);
+        $ac = safe_string($_GET['ac']);
+        $id = safe_string($_GET['id']);
+        if(!empty($ac) && !empty($id) && $ac == 'del'){
+            $M->where("id=$id")->delete();
+        }
         $where = "1=1";
         if ($keyword) {
             $where .= " and  album_name like '%$keyword%'";
         }
-        $lists = $M->where($where)->order("id desc")->select();
-        $count = $lists ? count($lists) : 0;
+        $count = $M->where($where)->count();
         $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
         $page = $pageM->show();
+        $lists = $M->where($where)->page($_GET['page'], 20)->order("id desc")->select();
         $this->assign('savePicUrl',C('SavePicUrl'));
         $this->assign('page',$page);
         $this->assign('lists',$lists);
@@ -95,13 +100,16 @@ class AlbumController extends BaseController {
         $ac = safe_string($_GET['ac']);
         $album_id = safe_string($_GET['album_id']);
         $id = safe_string($_GET['id']);
+        $ids = safe_string($_GET['ids']);
         $keyword = safe_string($_GET['keyword']);
-
         $album = new AlbumModel();
         $image = new ImgModel();
         try {
             if(!empty($ac) && !empty($id) && $ac == 'del'){
                 $image->where("id=$id")->delete();
+            }
+            if(!empty($ac) && !empty($ids) && $ac == 'delImages'){
+                $image->where(['id' => ['in', $ids]])->delete();
             }
             $info = $album->where("id=$album_id")->find();
             $where = "album_id=$album_id";
@@ -109,10 +117,10 @@ class AlbumController extends BaseController {
                 $where .= " and  img_name like '%$keyword%'";
             }
 
-            $detail = $image->where($where)->order("id desc")->select();
-            $count = $detail ? count($detail) : 0;
+            $count = $image->where($where)->count();
             $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
             $page = $pageM->show();
+            $detail = $image->where($where)->page($_GET['page'], 20)->order("id desc")->select();
             $this->assign('page',$page);
             $this->assign('info',$info);
             $this->assign('detail',$detail);

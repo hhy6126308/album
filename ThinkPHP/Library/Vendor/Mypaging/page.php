@@ -5,11 +5,11 @@ class MyPaging
 {
     protected $count = 0;  //总数
     protected $currPage = 1; //当前页
-    protected $pageSize = 2 ; //每页条数
+    protected $pageSize = 20 ; //每页条数
     protected $maxPage = 0; //最大页数
     protected $pageHTML = '';
 
-    public function __construct ($count = 0, $currPage = 1, $urlTemplate = '', $pageSize = 20)
+    public function __construct ($count = 0, $currPage = 1, $urlTemplate = '', $pageSize = '')
     {
         $this->count = $count;
         $this->currPage = $currPage;

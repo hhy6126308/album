@@ -36,16 +36,22 @@ class RewardController extends BaseController
         }elseif($album_id){
             $where .= " and  reward.album_id = $album_id";
         }
+
+        $count = $M->join('LEFT JOIN album ON album.id = reward.album_id')
+            ->join('LEFT JOIN img ON img.id = reward.img_id')
+            ->join('LEFT JOIN user_social ON user_social.id = reward.user_social_id')
+            ->where($where)
+            ->count();
+        $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
+        $page = $pageM->show();
         $lists = $M->join('LEFT JOIN album ON album.id = reward.album_id')
             ->join('LEFT JOIN img ON img.id = reward.img_id')
             ->join('LEFT JOIN user_social ON user_social.id = reward.user_social_id')
             ->where($where)
             ->field('reward.*,album.album_name,img.img_name,user_social.nick_name')
-            ->order("id desc")
+            ->page($_GET['page'], 20)
+            ->order("reward.id desc")
             ->select();
-        $count = $lists ? count($lists) : 0;
-        $pageM = new \Vendor\MyPaging($count, $_GET['page']);
-        $page = $pageM->show();
         $this->assign('page', $page);
         $this->assign('lists', $lists);
         $this->assign('select', $select);

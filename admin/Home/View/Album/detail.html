@@ -20,6 +20,9 @@
                                 <div class="am-btn-group am-btn-group-xs">
                                     <a href='#' id="doDownload" class="am-btn am-btn-default am-btn-success"><span class="am-icon-download"></span> 批量下载</a>
                                 </div>
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <a href='#' id="doDelImages" class="am-btn am-btn-default am-btn-success"><span class="am-icon-trash"></span> 批量删除</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -128,6 +131,24 @@
 //                    }
 //                });
 
+            });
+
+            $("#doDelImages").click(function(){
+                var ids = "";
+                var album_id = '<{$info.id}>';
+                $(".checkSingle:checked").each(function() {
+                    ids+=$(this).val();
+                    ids+=",";
+                });
+                ids = ids.substr(0, ids.lastIndexOf(","));
+                if(ids !== "" && ids !== "," && ids !== null){
+                    if(confirm('确定要删除吗?'))
+                    {
+                        window.location.href = "/Album/detail?ac=delImages&ids="+ids+"&album_id="+album_id;
+                    }
+                }else {
+                    alert('请先选择相片');
+                }
             });
         });
         

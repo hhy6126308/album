@@ -23,10 +23,11 @@ class UserController extends BaseController {
         if ($keyword) {
             $where .= " and  name like '%$keyword%'";
         }
-        $lists = $M->where($where)->order("id desc")->select();
-        $count = $lists ? count($lists) : 0;
+
+        $count = $M->where($where)->count();
         $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
         $page = $pageM->show();
+        $lists = $M->where($where)->page($_GET['page'], 20)->order("id desc")->select();
         $this->assign('page',$page);
         $this->assign('lists',$lists);
         $this->assign('keyword',$keyword);
