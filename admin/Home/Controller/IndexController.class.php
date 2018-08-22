@@ -10,6 +10,7 @@ class IndexController extends BaseController {
     }
 
     public function index(){
-        $this->display('index');
+        redirect("/Album");
+        //$this->display('index');
     }
 }
