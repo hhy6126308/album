@@ -67,7 +67,7 @@
                                             <a href="/Album/info?ac=edit&id=<{$i.id}>">编辑</a>
                                             <a href="/Album/upload?id=<{$i.id}>">上传</a>
                                             <a href="/Reward?album_id=<{$i.id}>">打赏记录</a>
-                                            <a href="javascript:void(0);"  onclick="deleteAlbum()">删除</a>
+                                            <a href="javascript:void(0);" data-name="<{$i.album_name}>" data-id="<{$i.id}>" class="j-del">删除</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -91,10 +91,22 @@
         window.location.href = '/Album?keyword=' + keyword;
     });
 
+    $(".j-del").click(function(){
+        var album_name = $(this).attr("data-name");
+        var album_id = $(this).attr("data-id");
+        if(confirm('确定要删除相册（' + album_name + '）吗?'))
+        {
+            window.location.href = "/Album?ac=del&id=" + album_id;
+            return true;
+        }
+        return false;
+    });
+
     function deleteAlbum () {
         if(confirm('确定要删除吗?'))
         {
-            window.location.href = "/Album?ac=del&id=<{$i.id}>";
+            console.log(this);
+            //window.location.href = "/Album?ac=del&id=<{$i.id}>";
             return true;
         }
         return false;
