@@ -55,8 +55,10 @@ class AlbumController extends BaseController {
                         $data['album_name'] = safe_string($_POST['album_name']);
                         $banner = parse_url(safe_string($_POST['album_banner']));
                         $index = parse_url(safe_string($_POST['album_index']));
+                        $album_share = parse_url(safe_string($_POST['album_share']));
                         $data['album_banner'] = $banner['path'];
                         $data['album_index'] = $index['path'];
+                        $data['album_share'] = $album_share['path'];
                         $data['album_des'] = safe_string($_POST['album_des']);
                         if ( empty($data['album_name']) ) {
                             throw new \Think\Exception("商品名称不能为空！", 1);  
