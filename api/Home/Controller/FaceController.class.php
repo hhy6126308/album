@@ -117,7 +117,7 @@ class FaceController extends BaseController
                 foreach ($task_list as $task) {
                     $this->task = $task;
                     $this->registerLosk();
-                    $this->log('任务（' . $this->task['id'] . '）开始');
+                    $this->log('开始');
                     if ($this->task['type'] == 1) {
                         //TODO
                     } else {
@@ -174,7 +174,7 @@ class FaceController extends BaseController
         if (isset($result['error_code']) && $result['error_code'] == 0) {
             $score = $result['result']['score'];
             $this->log($score);
-            if ($score > 20) {
+            if ($score > 50) {
                 return $score;
             }
         }
@@ -183,7 +183,7 @@ class FaceController extends BaseController
 
     private function log($msg)
     {
-        echo Date("Y-m-d H:i:s") . "\t" . $msg . PHP_EOL;
+        echo Date("Y-m-d H:i:s") . "\t 任务（" . $this->task['id'] . "）\t". $msg . PHP_EOL;
     }
 
     private function shutdown()
