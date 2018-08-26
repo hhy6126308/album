@@ -14,7 +14,7 @@ class FaceController extends BaseController
     const API_KEY = 'WWKqasb1sTQYHWu9cqZT4ilu';
     const SECRET_KEY = 'VzNkFWWAk7ddiqmH7052L7q1l46TZBmx';
 
-    private $redis_lock = 'recognition_lock';
+    private $redis_lock = 'face_recognition_lock_tmp';
 
     private $client;
     private $redis;
@@ -111,12 +111,14 @@ class FaceController extends BaseController
                 $task_list = $faceTask->where('status = 0')->select();
                 if (!$task_list) {
                     sleep(5);
-                    echo "sleep";
+                    continue;
                 }
 
                 foreach ($task_list as $task) {
                     $this->task = $task;
-                    $this->registerLosk();
+                    if (!$this->registerLosk()) {
+                        continue;
+                    };
                     $this->log('开始');
                     if ($this->task['type'] == 1) {
                         //TODO
@@ -125,9 +127,13 @@ class FaceController extends BaseController
 
                     }
                     $this->releasLock();
+                    $data = array(
+                        'status' => 1
+                    );
+                    $faceTask->where("id = " . $this->task['id'])->save($data);
                     $this->log('任务（' . $this->task['id'] . '）结束');
                 }
-                die;
+                sleep(5);
             }
         } catch (\Exception $e) {
             $this->releasLock();
@@ -192,15 +198,15 @@ class FaceController extends BaseController
         $this->releasLock();
     }
 
-    private function releasLock()
-    {
-        $key = $this->task['type'] . '_' . $this->task['type_id'];
-        $this->redis->setnx($this->redis_lock . $key, 'lock');
-    }
-
     private function registerLosk()
     {
-        $key = $this->task['type'] . '_' . $this->task['type_id'];
+        $key = $this->task['id'];
+        return $this->redis->setnx($this->redis_lock . $key, 'lock');
+    }
+
+    private function releasLock()
+    {
+        $key = $this->task['id'];
         $this->redis->del($this->redis_lock . $key);
     }
 
