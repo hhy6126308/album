@@ -1,5 +1,6 @@
 <?php
 namespace Vendor;
+
 /**
  * Created by PhpStorm.
  * User: liuxiandong
@@ -66,7 +67,7 @@ class UploadFile {//类定义开始
      */
     public function __construct($config=array()) {
         if(is_array($config)) {
-            $this->config   =   array_merge($this->config,$config);
+            $this->config   =  array_merge($this->config,$config);
         }
     }
 
