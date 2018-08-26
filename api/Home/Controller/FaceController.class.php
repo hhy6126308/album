@@ -19,12 +19,29 @@ class FaceController extends BaseController
     private $client;
     private $redis;
     private $task;
+    private $face_token = '';
 
     public function __construct()
     {
         Vendor('Baiduai.AipFace');
         $this->client = new \Vendor\AipFace(self::APP_ID, self::API_KEY, self::SECRET_KEY);
         $this->redis  = new RedisModel();
+    }
+
+    public function test()
+    {
+        $result = $this->client->match([
+            [
+                'image'      => "42975681652f2907fc5cb62093a781d5",
+                'image_type' => 'FACE_TOKEN',
+            ],
+            [
+                'image'      => "https://image.album.iqikj.com/20180812/11/11_2071_DSC_4206.jpg",
+                'image_type' => 'URL',
+            ]
+        ]);
+
+        echo json_encode($result);
     }
 
     public function querytask()
@@ -116,6 +133,7 @@ class FaceController extends BaseController
 
                 foreach ($task_list as $task) {
                     $this->task = $task;
+                    $this->face_token = '';
                     if (!$this->registerLosk()) {
                         continue;
                     };
@@ -157,7 +175,9 @@ class FaceController extends BaseController
                 $cell = array(
                     'img_url' => $url,
                     'task_id' => $this->task['id'],
-                    'score' => $score
+                    'score' => $score,
+                    'c_t' => time(),
+                    'u_t' => time(),
                 );
                 $imageResM->add($cell);
             }
@@ -166,7 +186,8 @@ class FaceController extends BaseController
 
     private function recognitionImage($url1, $url2)
     {
-        $result = $this->client->match([
+
+        $request = [
             [
                 'image'      => $url1,
                 'image_type' => 'URL',
@@ -175,10 +196,19 @@ class FaceController extends BaseController
                 'image'      => $url2,
                 'image_type' => 'URL',
             ],
-        ]);
+        ];
+
+        if ($this->face_token) {
+            $request[0] = [
+                'image'      => $this->face_token,
+                'image_type' => 'FACE_TOKEN',
+            ];
+        }
+        $result = $this->client->match($request);
 
         if (isset($result['error_code']) && $result['error_code'] == 0) {
             $score = $result['result']['score'];
+            $this->face_token = !empty($result['result']['face_list'][0]['face_token']) ? $result['result']['face_list'][0]['face_token'] : '';
             $this->log($score);
             if ($score > 50) {
                 return $score;
