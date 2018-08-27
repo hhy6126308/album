@@ -4,7 +4,7 @@
             <div class="widget am-cf">
                 <div class="widget-head am-cf">
                     <div class="widget-title  am-cf">
-                        用户列表
+                        相册组列表
                         <ol class="am-breadcrumb" style="float: right">
                             <li><a href="#" class="am-icon-home">首页</a></li>
                             <foreach name="npc" item="vo" >
@@ -14,16 +14,17 @@
                     </div>
                 </div>
                 <div class="widget-body  am-fr">
-
-                    <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
-                        <div class="am-form-group">
-                            <div class="am-btn-toolbar">
-                                <div class="am-btn-group am-btn-group-xs">
-                                    <a href='/User/add' class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增用户</a>
+                    <if condition="$Think.session.ADMIN_TYPE == 20">
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a href='/AlbumGroup/info?ac=add' class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增分组</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </if>
                     <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                         <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
                             <input type="text" class="am-form-field j-keyword" value="<{$keyword}>">
@@ -37,30 +38,31 @@
                         <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
                             <thead>
                             <tr class="am-text-nowrap">
-                                <th>用户名</th>
-                                <th>email</th>
-                                <th>用户类型</th>
-                                <th>最后登陆时间</th>
+                                <th>分组ID</th>
+                                <th>组名</th>
+                                <th>简介</th>
+                                <th>二维码</th>
+                                <th>创建时间</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
                             <tbody>
                             <foreach name='lists' item='i'>
                                 <tr class="gradeX">
-                                    <td class="am-text-middle"><{$i.name}></td>
-                                    <td class="am-text-middle"><{$i.email}></td>
-                                    <td class="am-text-middle">
-                                        <if condition="$i.user_type == 20">
-                                            超级管理员
-                                            <else />
-                                            普通管理员
-                                        </if>
+                                    <td class="am-text-middle"><{$i.id}></td>
+                                    <td class="am-text-middle"><{$i.group_name}></td>
+                                    <td class="am-text-middle" style="max-width: 200px;"><{$i.group_desc}></td>
+                                    <td>
+                                        <img src="<{$i.aqrcode_url}>" class="tpl-table-line-img" alt="" style="width: 37px;height: 65.66px;">
                                     </td>
-                                    <td class="am-text-middle"><{$i.last_login}></td>
+                                    <td class="am-text-middle"><{$i.create_time}></td>
                                     <td class="am-text-middle am-text-nowrap">
                                         <div class="tpl-table-black-operation">
-                                            <if condition="$i.user_type == 10">
-                                                <a href="/UserGroupRole/role?id=<{$i.id}>">添加/修改相册组</a>
+                                            <a href="/Album?group_id=<{$i.id}>">详情</a>
+                                            <a href="/UserGroupRole/users?group_id=<{$i.id}>">授权列表</a>
+                                            <if condition="$Think.session.ADMIN_TYPE == 20">
+                                                <a href="/AlbumGroup/info?ac=edit&id=<{$i.id}>">编辑</a>
+                                                <a href="javascript:void(0);" data-name="<{$i.group_name}>" data-id="<{$i.id}>" class="j-del">删除</a>
                                             </if>
                                         </div>
                                     </td>
@@ -79,9 +81,19 @@
             </div>
         </div>
     </div>
-    <script>
-        $(".j-search").click(function(){
-            var keyword = $('.j-keyword').val();
-            window.location.href = '/User?keyword=' + keyword;
-        });
-    </script>
+<script>
+    $(".j-search").click(function(){
+        var keyword = $('.j-keyword').val();
+        window.location.href = '/AlbumGroup?keyword=' + keyword;
+    });
+    $(".j-del").click(function(){
+        var group_name = $(this).attr("data-name");
+        var id = $(this).attr("data-id");
+        if(confirm('确定要删除分组 ' + group_name + ' 吗?'))
+        {
+            window.location.href = "/AlbumGroup/info?ac=del&id=" + id;
+            return true;
+        }
+        return false;
+    });
+</script>

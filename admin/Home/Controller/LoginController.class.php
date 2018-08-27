@@ -31,7 +31,8 @@ class LoginController extends BaseController {
                     session('ADMIN_AUTHID', $user['id']);
                     session('ADMIN_EMAIL', $user['email']);
                     session('ADMIN_NAME', $user['name']);
-                    $redirectUrl = '/Album';
+                    session('ADMIN_TYPE', $user['user_type']);
+                    $redirectUrl = '/AlbumGroup';
                     redirect($redirectUrl);
                 } else {
                     throw new \Think\Exception("帐号密码错误！", 1);

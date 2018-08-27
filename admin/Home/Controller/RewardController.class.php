@@ -13,7 +13,7 @@ class RewardController extends BaseController
     public function _initialize()
     {
         layout("Comon/layout");
-        $this->checkAuth();
+        $this->checkAuth('Reward');
         $this->assign('sidebar_name', 'reward');
     }
 

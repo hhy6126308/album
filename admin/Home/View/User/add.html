@@ -1,3 +1,4 @@
+<script src="/static/assets/js/amazeui.min.js"></script>
 <div class="row-content am-cf">
     <div class="row">
         <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
@@ -15,6 +16,15 @@
                 </div>
                 <div class="widget-body am-fr">
                     <form class="am-form tpl-form-border-form tpl-form-border-br" action='' method="post">
+                        <div class="am-form-group">
+                            <label class="am-u-sm-3 am-form-label">类型</label>
+                            <div class="am-u-sm-9">
+                                <select name="user_type" data-am-selected class="j-select am-selected-btn">
+                                    <option value="10" <if condition = "$select == 'img_name'">selected </if>>普通管理员</option>
+                                    <option value="20" <if condition = "$select == 'album_name'">selected </if>>超级管理员</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="am-form-group">
                             <label class="am-u-sm-3 am-form-label">昵称</label>
                             <div class="am-u-sm-9">

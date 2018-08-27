@@ -17,6 +17,7 @@ class LoginController extends BaseController {
         $rs = $this->rs_data;
         $jscode = safe_string($_POST['jscode']);
         $nick_name = safe_string($_POST['nick_name']);
+        $avatar_url = safe_string($_POST['avatar_url']);
         if(empty($jscode)){
             $rs['error'] = 1;
             $rs['msg'] = 'jscode为空！';
@@ -41,8 +42,13 @@ class LoginController extends BaseController {
                 $data['openid'] = $openid;
                 $data['social_type'] = 'weixin';
                 $data['nick_name'] = $nick_name;
+                $data['avatar_url'] = $avatar_url;
                 $data['create_time'] = date("Y-m-d H:i:s");
                 $userSocial->add($data);
+            }else{
+                $data['nick_name'] = $nick_name;
+                $data['avatar_url'] = $avatar_url;
+                $userSocial->where("openid='{$openid}'")->save($data);
             }
 
             $rs['error'] = 0;

@@ -1,0 +1,53 @@
+<div class="row-content am-cf">
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">
+                        <{$ac=='add'?'添加分组':"编辑分组:{$info['group_name']}"}>
+                        <ol class="am-breadcrumb" style="float: right">
+                            <li><a href="#" class="am-icon-home">首页</a></li>
+                            <foreach name="npc" item="vo" >
+                                <li><a href="<{$vo.url}>"><{$vo.name}></a></li>
+                            </foreach>     
+                        </ol>
+                    </div>
+                </div>
+                <div class="widget-body am-fr">
+                    <form class="am-form tpl-form-border-form tpl-form-border-br" action='' method="post">
+                        <div class="am-form-group">
+                            <label for="" class="am-u-sm-3 am-form-label">组名</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" placeholder="输入分组名称" name="group_name"  value="<{$info.group_name}>">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">简介</label>
+                            <div class="am-u-sm-9">
+                                <textarea class="" rows="4" name='group_desc' id="user-intro" placeholder="请输入分组简介"><{$info.group_desc}></textarea>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <input type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success " value="提交" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$(function() {
+    var $dpInput = $('.form-datetime').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii'
+    });
+});
+</script>
+<link href="/static/baidu/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/static/baidu/third-party/jquery.min.js"></script>
+<script type="text/javascript" src="/static/baidu/third-party/template.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/static/baidu/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/static/baidu/umeditor.min.js"></script>
+<script type="text/javascript" src="/static/baidu/lang/zh-cn/zh-cn.js"></script>

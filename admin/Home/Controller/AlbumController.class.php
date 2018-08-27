@@ -7,36 +7,42 @@ use \Home\Model\ImgModel;
 class AlbumController extends BaseController {
 
     protected $npc = array(
-        array("url" => '/Album', 'name' => '相册管理' ),
+        array("url" => '/AlbumGroup', 'name' => '相册组列表' ),
+        array("url" => "/Album", 'name' => '相册列表' ),
     );
 
     public function _initialize () {
         layout("Comon/layout");
-        $this->checkAuth();
+        $this->checkAuth('Album');
+        if(isset($_SESSION['group_id'])){
+            $this->npc[1]['url'] = '/Album?group_id='.$_SESSION['group_id'];
+        }
         $this->assign('sidebar_name','album');
     }
 
     public function index(){
         Vendor('Mypaging.page');
         $M = new AlbumModel;
-        $keyword = safe_string($_GET['keyword']);
-        $ac = safe_string($_GET['ac']);
-        $id = safe_string($_GET['id']);
-        if(!empty($ac) && !empty($id) && $ac == 'del'){
-            $M->where("id=$id")->delete();
+        $group_id = safe_string($_GET['group_id']);
+        if($group_id){
+            $this->npc[1]['url'] = '/Album?group_id='.$group_id;
+            session('group_id', $group_id);
+            $keyword = safe_string($_GET['keyword']);
+            $id = safe_string($_GET['id']);
+            $where = "group_id={$group_id}";
+            if ($keyword) {
+                $where .= " and album_name like '%$keyword%'";
+            }
+            $count = $M->where($where)->count();
+            $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
+            $page = $pageM->show();
+            $lists = $M->where($where)->page($_GET['page'], 20)->order("id desc")->select();
+            $this->assign('savePicUrl',C('SavePicUrl'));
+            $this->assign('page',$page);
+            $this->assign('lists',$lists);
+            $this->assign('keyword',$keyword);
         }
-        $where = "1=1";
-        if ($keyword) {
-            $where .= " and  album_name like '%$keyword%'";
-        }
-        $count = $M->where($where)->count();
-        $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
-        $page = $pageM->show();
-        $lists = $M->where($where)->page($_GET['page'], 20)->order("id desc")->select();
-        $this->assign('savePicUrl',C('SavePicUrl'));
-        $this->assign('page',$page);
-        $this->assign('lists',$lists);
-        $this->assign('keyword',$keyword);
+
         $this->display('index');
     }
 
@@ -53,35 +59,49 @@ class AlbumController extends BaseController {
                     }
                     if ($_POST) {
                         $data['album_name'] = safe_string($_POST['album_name']);
+                        $data['group_id'] = $_SESSION['group_id'];
                         $banner = parse_url(safe_string($_POST['album_banner']));
                         $index = parse_url(safe_string($_POST['album_index']));
                         $album_share = parse_url(safe_string($_POST['album_share']));
                         $data['album_banner'] = $banner['path'];
                         $data['album_index'] = $index['path'];
                         $data['album_share'] = $album_share['path'];
+                        $data['is_face'] = safe_string($_POST['is_face']) ? safe_string($_POST['is_face']) : 0;
+                        $data['is_reward'] = safe_string($_POST['is_reward']) ? safe_string($_POST['is_reward']) : 0;
                         $data['album_des'] = safe_string($_POST['album_des']);
                         if ( empty($data['album_name']) ) {
                             throw new \Think\Exception("商品名称不能为空！", 1);  
                         } 
                         if ($ac == 'add') {
                             $data['create_time'] = date("Y-m-d H:i:s");
-                            if ( false === $M->add($data)) {
+                            $id = $M->add($data);
+                            if ( false === $id) {
                                 throw new \Think\Exception("相册添加失败！", 1);
                             }
+                            //生产二维码
+                            $url = \getWxaqrcode('pages/album/index?albumId='.$id);
+                            $data['aqrcode_url'] = $url;
+                            $M->where("id=$id")->save($data);
                         } else {
                             if ( false === $M->where("id=$id")->save($data)) {
                                 throw new \Think\Exception("相册修改失败！", 1);
                             }
                         }
-                        $this->success('相册操作成功！', '/Album');
+                        $this->success('相册操作成功！', '/Album?group_id='.$_SESSION['group_id']);
                         exit();
                     }
                     break;
                 case 'del':
+                    if(empty($id)){
+                        throw new \Think\Exception("未知相册！", 1);
+                    }
+                    $M->where("id=$id")->delete();
+                    $this->success('相册操作成功！', '/Album?group_id='.$_SESSION['group_id']);
+                    exit();
                     break;
                 default:
                     if (empty($id)) {
-                        throw new \Think\Exception("未知商品！", 1);
+                        throw new \Think\Exception("未知相册！", 1);
                     }
                     break;
             }
@@ -92,7 +112,7 @@ class AlbumController extends BaseController {
             $this->assign('savePicUrl',C('SavePicUrl'));
             $this->display();
         } catch ( \Think\Exception $e ) {
-            $this->error($e->getMessage(), '/Album', 3);
+            $this->error($e->getMessage(), '/Album?group_id='.$_SESSION['group_id'], 3);
         }
     }
 
@@ -145,7 +165,7 @@ class AlbumController extends BaseController {
             $this->assign('info',$info);
             $this->display();
         } catch ( \Think\Exception $e ) {
-            $this->error($e->getMessage(), '/Album', 3);
+            $this->error($e->getMessage(), '/Album?group_id='.$_SESSION['group_id'], 3);
         }
     }
 

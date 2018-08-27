@@ -1,0 +1,45 @@
+<div class="row-content am-cf">
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">
+                        添加/修改相册组
+                        <ol class="am-breadcrumb" style="float: right">
+                            <li><a href="#" class="am-icon-home">首页</a></li>
+                            <foreach name="npc" item="vo" >
+                                <li><a href="<{$vo.url}>"><{$vo.name}></a></li>
+                            </foreach>
+                        </ol>
+                    </div>
+                </div>
+                <div class="widget-body am-fr">
+                    <form class="am-form tpl-form-border-form tpl-form-border-br" action='/UserGroupRole/role?id=<{$user.id}>&ac=add' method="post">
+                        <div class="am-form-group">
+                            <label class="am-u-sm-3 am-form-label">昵称</label>
+                            <div class="am-u-sm-9">
+                                <span class="am-form-field"><{$user.name}></span>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label class="am-u-sm-3 am-form-label">添加分组</label>
+                            <div class="am-u-sm-9">
+                                <select multiple data-am-selected name="group_ids[]">
+                                    <foreach name="groups" item="group" >
+                                        <option value="<{$group.id}>" <if condition = "$group.is_selected == 1">selected </if>><{$group.group_name}></option>
+                                    </foreach>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <input type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success " value="提交" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

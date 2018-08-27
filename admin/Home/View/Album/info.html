@@ -62,7 +62,28 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">人脸识别状态</label>
+                            <div class="am-u-sm-9">
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_face" value="0" <{$info['is_face']==0 ? 'checked':''}> > 不允许&nbsp;&nbsp;
+                                </label>
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_face" value="1" <{$info['is_face']==1 ? 'checked':''}> > 允许&nbsp;&nbsp;
+                                </label>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">打赏状态</label>
+                            <div class="am-u-sm-9">
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_reward" value="0" <{$info['is_reward']==0 ? 'checked':''}> > 不允许&nbsp;&nbsp;
+                                </label>
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_reward" value="1" <{$info['is_reward']==1 ? 'checked':''}> > 允许&nbsp;&nbsp;
+                                </label>
+                            </div>
+                        </div>
                         <div class="am-form-group">
                             <label for="user-intro" class="am-u-sm-3 am-form-label">相册简介</label>
                             <div class="am-u-sm-9">

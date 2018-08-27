@@ -20,9 +20,11 @@
                                 <div class="am-btn-group am-btn-group-xs">
                                     <a href='#' id="doDownload" class="am-btn am-btn-default am-btn-success"><span class="am-icon-download"></span> 批量下载</a>
                                 </div>
-                                <div class="am-btn-group am-btn-group-xs">
-                                    <a href='#' id="doDelImages" class="am-btn am-btn-default am-btn-success"><span class="am-icon-trash"></span> 批量删除</a>
-                                </div>
+                                <if condition="$Think.session.ADMIN_TYPE == 20">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a href='#' id="doDelImages" class="am-btn am-btn-default am-btn-success"><span class="am-icon-trash"></span> 批量删除</a>
+                                    </div>
+                                </if>
                             </div>
                         </div>
                     </div>
@@ -45,7 +47,9 @@
                                 <th>缩略图</th>
                                 <th>相片名称</th>
                                 <th>创建时间</th>
-                                <th>操作</th>
+                                <if condition="$Think.session.ADMIN_TYPE == 20">
+                                    <th>操作</th>
+                                </if>
                             </tr>
                             </thead>
                             <tbody>
@@ -59,11 +63,13 @@
                                     </td>
                                     <td class="am-text-middle" style="max-width: 200px;"><{$d.img_name}></td>
                                     <td class="am-text-middle"><{$d.create_time}></td>
-                                    <td class="am-text-middle">
-                                        <div class="tpl-table-black-operation">
-                                            <a href="javascript:void(0);"  onclick="deleteImg()">删除</a>
-                                        </div>
-                                    </td>
+                                    <if condition="$Think.session.ADMIN_TYPE == 20">
+                                        <td class="am-text-middle">
+                                            <div class="tpl-table-black-operation">
+                                                <a href="javascript:void(0);"  onclick="deleteImg()">删除</a>
+                                            </div>
+                                        </td>
+                                    </if>
                                 </tr>
                             </foreach>
                             <!-- more data -->

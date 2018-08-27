@@ -11,7 +11,12 @@ class UserController extends BaseController {
 
     public function _initialize () {
         layout("Comon/layout");
-        $this->checkAuth();
+        if($_SERVER['REQUEST_URI'] == '/User/edit' || $_SERVER['REQUEST_URI'] == '/User/loginout'){
+            $this->checkAuth();
+        }else{
+            $this->checkAuth('User');
+        }
+
     }
 
     public function index()
@@ -43,6 +48,7 @@ class UserController extends BaseController {
             if ($_POST) {
                 $data['name'] = safe_string($_POST['name']);
                 $data['email'] = safe_string($_POST['email']);
+                $data['user_type'] = safe_string($_POST['user_type']);
                 $data['login_pwd'] = $_POST['login_pwd'] ? md5(C('USER_SALT') . safe_string($_POST['login_pwd'])) : md5(C('USER_SALT') . 123456);
                 $data['create_time'] = date("Y-m-d H:i:s");
                 if ( empty($data['email']) ) {
@@ -63,9 +69,12 @@ class UserController extends BaseController {
         }
     }
 
+    /**
+     * 修改密码
+     */
     public function edit()
     {
-        $this->assign('sidebar_name','edit');
+        //$this->assign('sidebar_name','edit');
         $M = new UserModel();
         try {
             $uid = $this->getuid();
@@ -95,7 +104,8 @@ class UserController extends BaseController {
                         throw new \Think\Exception("修改失败！", 1);
                     }
                     session('ADMIN_NAME', $data['name']);
-                    $this->success("修改成功", '/User/edit', 1);
+                    session("ADMIN_AUTHID", null);
+                    $this->success("修改成功", '/Login', 1);
                     exit();
                 }
                 $this->assign('user', $user);

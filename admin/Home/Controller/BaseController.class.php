@@ -5,13 +5,49 @@ use Think\Controller;
 class BaseController extends Controller {
 
     protected $npc = array();
-    
+
+    protected $menus = [
+        'AlbumGroup' => 0,
+        'Album' => 0,
+        'Reward' => 0,
+        'User' => 0,
+        'UserGroupRole' => 0,
+        'AlbumSetting' => 0,
+    ];
     /**
     * 验证登录
     */
-    protected function checkAuth () {
+    protected function checkAuth ($key = '') {
         if (!session("ADMIN_AUTHID")) {
             redirect ( '/Login' );
+        }
+        $this->checkMenus($key);
+    }
+
+    protected function checkMenus ($key)
+    {
+        if (!session("ADMIN_TYPE")) {
+            redirect ( '/Login' );
+        }
+        $user_type = session("ADMIN_TYPE");
+        if($user_type == 10){
+            $this->menus['AlbumGroup'] = 1;
+            $this->menus['Album'] = 1;
+            $this->menus['UserGroupRole'] = 1;
+        }elseif ($user_type == 20){
+            $this->menus = [
+                'AlbumGroup' => 1,
+                'Album' => 1,
+                'Reward' => 1,
+                'User' => 1,
+                'UserGroupRole' => 1,
+                'AlbumSetting' => 1,
+            ];
+        }
+        if($key){
+            if($this->menus[$key] != 1){
+                $this->error('无访问权限', '/AlbumGroup', 2);
+            }
         }
     }
 

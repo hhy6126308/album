@@ -11,21 +11,26 @@ class AlbumController extends BaseController {
     {
         $token = safe_string($_GET['token']);
         $album_name = safe_string($_GET['album_name']);
-        $redisM = new RedisModel();
-        if($redisM->exists($token) == 0){
-            $rs['error'] = 304;
-            $rs['msg'] = '用户未登录';
-            $this->out_put($rs);
+        $group_id = safe_string($_GET['group_id']);
+        $M = new AlbumModel;
+        if(empty($group_id)){
+            $redisM = new RedisModel();
+            if($redisM->exists($token) == 0){
+                $rs['error'] = 304;
+                $rs['msg'] = '用户未登录';
+                $this->out_put($rs);
+            }
+            $where = "1=1";
+        }else{
+            $where = "group_id={$group_id}";
         }
 
-        $M = new AlbumModel;
-        $where = "1=1";
         if ($album_name) {
             $where .= " and  album_name like '%$album_name%'";
         }
         $rs['error'] = 0;
         $rs['msg'] = 'ok';
-        $rs['data'] = $M->where($where)->order("id desc")->select();
+        $rs['data'] = $M->where($where)->order("id desc")->select();;
 
         $this->out_put($rs);
     }
@@ -85,4 +90,27 @@ class AlbumController extends BaseController {
         $this->out_put($rs);
     }
 
+    public function delImage()
+    {
+        $id = safe_string($_GET['id']);
+        $token = safe_string($_GET['token']);
+        $redisM = new RedisModel();
+        if($redisM->exists($token) == 0){
+            $rs['error'] = 304;
+            $rs['msg'] = '用户未登录';
+            $this->out_put($rs);
+        }
+        $image = new ImgModel();
+        if(false === $image->where("id=$id")->delete()){
+            $rs['error'] = 1;
+            $rs['msg'] = '删除失败';
+            $rs['data'] = '';
+        }else{
+            $rs['error'] = 0;
+            $rs['msg'] = 'ok';
+            $rs['data'] = '';
+        }
+
+        $this->out_put($rs);
+    }
 }

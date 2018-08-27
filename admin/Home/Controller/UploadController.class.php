@@ -74,13 +74,13 @@ class UploadController extends BaseController {
 
             }
             echo "<script language='javascript'>";
-            echo "alert('上传文件保存失败 请在次上传');";
+            echo "alert('上传文件保存失败 请再次上传');";
             echo "</script>";
             exit;
 
         }else{
             echo "<script language='javascript'>";
-            echo "alert('上传文件非图片 请在次上传');";
+            echo "alert('上传文件非图片 请再次上传');";
             echo "</script>";
             exit;
         }
@@ -305,12 +305,18 @@ class UploadController extends BaseController {
             $fileName = uniqid("file_");
         }
         $M = new ImgModel();
-        $lastImageId = 1;
-        $lastImg = $M->order('id desc')->field('id')->limit(1)->find();
-        if(!empty($lastImg)){
-            $lastImageId = $lastImg['id'] + 1;
+//        $lastImageId = 1;
+//        $lastImg = $M->order('id desc')->field('id')->limit(1)->find();
+//        if(!empty($lastImg)){
+//            $lastImageId = $lastImg['id'] + 1;
+//        }
+//        $fileName = $album_id.'_'.$lastImageId.'_'.$fileName;
+        $fileName = $album_id.'_'.$fileName;
+        //同相册去重
+        $img_name = explode('.', $fileName)[0];
+        if(!empty($M->where('img_name = '."'".$img_name."'".' and album_id = '.$album_id)->limit(1)->find())){
+            die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "当前相册已存在该照片"}, "id" : "id"}');
         }
-        $fileName = $album_id.'_'.$lastImageId.'_'.$fileName;
         $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
         $uploadPath = $uploadDir . $fileName;
 

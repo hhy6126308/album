@@ -492,14 +492,13 @@
         };
 
         uploader.onUploadAccept = function(object, ret) {
-            console.log(object)
+            //console.log(object)
             console.log(ret)
             if(ret.error.code != 200){
                 alert(ret.error.message);
-                //setState( 'error' );
+                return false;
             }
         };
-
 
         uploader.onFileQueued = function( file ) {
             fileCount++;

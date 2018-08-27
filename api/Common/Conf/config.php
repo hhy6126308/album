@@ -8,6 +8,12 @@ return array(
     'DB_NAME'   => 'album',        // 数据库名
     'DB_USER'   => 'root',      // 用户名
     'DB_PWD'    => '123456',    // 密码
+    //local
+//    'DB_HOST'   => '192.168.11.10', // 服务器地址
+//    'DB_NAME'   => 'album',        // 数据库名
+//    'DB_USER'   => 'homestead',      // 用户名
+//    'DB_PWD'    => 'secret',    // 密码
+    
     'DB_PORT'   => 3306,        // 端口
     //'DB_PREFIX' => 'wm_tb_',            // 数据库表前缀
     'DB_CHARSET'=> 'utf8',
