@@ -32,7 +32,6 @@ function getWxaqrcode($path)
         $aUrl = sprintf($aapi,$WXres['access_token']);
         $data = json_encode(['path' => $path, 'width' => 430]);
         $aqrcode = \getData($aUrl, false, '', false, $data);
-
         //文件保存目录路径
         $save_path = C('SavePicPath');
         //文件保存目录URL
@@ -53,7 +52,7 @@ function getWxaqrcode($path)
         //移动文件
         $file_path = $save_path . $new_file_name;
         $file_url = $save_url . $new_file_name;
-        if(file_put_contents($file_path, base64_decode($aqrcode))){
+        if(file_put_contents($file_path, $aqrcode)){
             return $file_url;
         }
     }

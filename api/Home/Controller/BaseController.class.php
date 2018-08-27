@@ -15,7 +15,7 @@ class BaseController extends Controller {
     }
 
     public function getOpenid(){
-        $rd_session = safe_string($_POST['rd_session']);
+        $rd_session = safe_string($_POST['rd_session']) ? safe_string($_POST['rd_session']) : safe_string($_GET['rd_session']);
         if(empty($rd_session)){
             $this->out_put(array("error"=>304,"msg"=>"用户未登录","data"=>""));
         }
@@ -28,7 +28,6 @@ class BaseController extends Controller {
         }else{
             $this->out_put(array("error"=>304,"msg"=>"用户未登录","data"=>""));
         }
-
     }
 
     /**
