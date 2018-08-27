@@ -30,11 +30,17 @@ class AlbumGroupController extends BaseController {
             $UserGroupRoleModel = new UserGroupRoleModel();
             $roles = $UserGroupRoleModel->where("user_id={$uid}")->order("id desc")->select();
             $ids = array_column($roles, 'group_id');
-
-            $count = $M->where($where)->where(['id' => ['in', $ids]])->count();
-            $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
-            $page = $pageM->show();
-            $lists = $M->where($where)->where(['id' => ['in', $ids]])->page($_GET['page'], 20)->order("id desc")->select();
+            if(empty($ids)){
+                $count = 0;
+                $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
+                $page = $pageM->show();
+                $lists = [];
+            }else{
+                $count = $M->where($where)->where(['id' => ['in', $ids]])->count();
+                $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
+                $page = $pageM->show();
+                $lists = $M->where($where)->where(['id' => ['in', $ids]])->page($_GET['page'], 20)->order("id desc")->select();
+            }
         }else{
             $count = $M->where($where)->count();
             $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
