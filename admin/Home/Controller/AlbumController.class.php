@@ -62,12 +62,12 @@ class AlbumController extends BaseController {
                         $data['group_id'] = $_SESSION['group_id'];
                         $banner = parse_url(safe_string($_POST['album_banner']));
                         $index = parse_url(safe_string($_POST['album_index']));
-                        $album_share = parse_url(safe_string($_POST['album_share']));
+                        $index = parse_url(safe_string($_POST['album_share']));
                         $data['album_banner'] = $banner['path'];
                         $data['album_index'] = $index['path'];
-                        $data['album_share'] = $album_share['path'];
                         $data['is_face'] = safe_string($_POST['is_face']) ? safe_string($_POST['is_face']) : 0;
                         $data['is_reward'] = safe_string($_POST['is_reward']) ? safe_string($_POST['is_reward']) : 0;
+                        $data['album_share'] = $index['path'];
                         $data['album_des'] = safe_string($_POST['album_des']);
                         if ( empty($data['album_name']) ) {
                             throw new \Think\Exception("商品名称不能为空！", 1);  
