@@ -209,8 +209,9 @@ class FaceController extends BaseController
         if (isset($result['error_code']) && $result['error_code'] == 0) {
             $score = $result['result']['score'];
             $this->face_token = !empty($result['result']['face_list'][0]['face_token']) ? $result['result']['face_list'][0]['face_token'] : '';
-            $this->log($score);
+
             if ($score > 50) {
+                $this->log($score);
                 return $score;
             }
         }
