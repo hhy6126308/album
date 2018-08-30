@@ -60,13 +60,15 @@ class FaceController extends BaseController
         $info = json_decode($info, true);
 
         if ($info['task_num'] >= $info['task_count']) {
-            $res['status'] = 1;
+            $status = 1;
+        } else {
+            $status = 0;
         }
 
         $rs['error'] = 0;
         $rs['msg']   = 'ok';
         $rs['data']  = [
-            'status' => $res['status'],
+            'status' => $status,
             'task_num' => $info['task_num'],
             'items'  => $items,
         ];
