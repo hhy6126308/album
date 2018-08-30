@@ -82,7 +82,7 @@ class AlbumGroupController extends BaseController {
                                 throw new \Think\Exception("分组添加失败！", 1);
                             }
                             //生产二维码
-                            $url = \getWxaqrcode('pages/myspace/index?group_id='.$id);
+                            $url = \getWxaqrcode('pages/myspace/index?space_id='.$id);
                             $data['aqrcode_url'] = $url;
                             $M->where("id=$id")->save($data);
                         } else {

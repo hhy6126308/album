@@ -18,6 +18,19 @@ class AlbumController extends BaseController {
         $this->assign('sidebar_name','album');
     }
 
+    public function buildqrcode()
+    {
+        $id = safe_string($_GET['id']);
+        $type = safe_string($_GET['type']);
+        if ($type == 1) {
+            $page = 'pages/album/index?albumId=' . $id;
+        } else {
+            $page = 'pages/myspace/index?space_id=' . $id;
+        }
+        $url = \getWxaqrcode($page);
+        echo $url;
+    }
+
     public function index(){
         Vendor('Mypaging.page');
         $M = new AlbumModel();
