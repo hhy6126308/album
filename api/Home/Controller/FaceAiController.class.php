@@ -51,6 +51,7 @@ class FaceAiController extends BaseController
                     $info = json_decode($info, true);
                     $info['task_num'] = $info['task_num'] + 1;
                     $this->redis->set("face_task_" . $task_id, json_encode($info));
+                    $this->redis->del("face_task_count_" . $task_id);
                     break;
                 } else {
                     usleep(10000);
