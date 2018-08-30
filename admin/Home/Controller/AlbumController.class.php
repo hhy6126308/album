@@ -1,47 +1,39 @@
 <?php
 namespace Home\Controller;
 
+use Home\Model\AlbumGroupModel;
+use Home\Model\AlbumGroupRoleModel;
 use \Home\Model\AlbumModel;
 use \Home\Model\ImgModel;
 
 class AlbumController extends BaseController {
 
     protected $npc = array(
-        array("url" => '/AlbumGroup', 'name' => '相册组列表' ),
         array("url" => "/Album", 'name' => '相册列表' ),
     );
 
     public function _initialize () {
         layout("Comon/layout");
         $this->checkAuth('Album');
-        if(isset($_SESSION['group_id'])){
-            $this->npc[1]['url'] = '/Album?group_id='.$_SESSION['group_id'];
-        }
         $this->assign('sidebar_name','album');
     }
 
     public function index(){
         Vendor('Mypaging.page');
-        $M = new AlbumModel;
-        $group_id = safe_string($_GET['group_id']);
-        if($group_id){
-            $this->npc[1]['url'] = '/Album?group_id='.$group_id;
-            session('group_id', $group_id);
-            $keyword = safe_string($_GET['keyword']);
-            $id = safe_string($_GET['id']);
-            $where = "group_id={$group_id}";
-            if ($keyword) {
-                $where .= " and album_name like '%$keyword%'";
-            }
-            $count = $M->where($where)->count();
-            $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
-            $page = $pageM->show();
-            $lists = $M->where($where)->page($_GET['page'], 20)->order("id desc")->select();
-            $this->assign('savePicUrl',C('SavePicUrl'));
-            $this->assign('page',$page);
-            $this->assign('lists',$lists);
-            $this->assign('keyword',$keyword);
+        $M = new AlbumModel();
+        $keyword = safe_string($_GET['keyword']);
+        $where = "1=1";
+        if ($keyword) {
+            $where .= " and album_name like '%$keyword%'";
         }
+        $count = $M->where($where)->count();
+        $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
+        $page = $pageM->show();
+        $lists = $M->where($where)->page($_GET['page'], 20)->order("id desc")->select();
+        $this->assign('savePicUrl',C('SavePicUrl'));
+        $this->assign('page',$page);
+        $this->assign('lists',$lists);
+        $this->assign('keyword',$keyword);
 
         $this->display('index');
     }
@@ -49,8 +41,12 @@ class AlbumController extends BaseController {
     public function info(){
         $ac = safe_string($_GET['ac']);
         $id = safe_string($_GET['id']);
+        $groups = $roles = [];
         $M = new AlbumModel();
+        $AlbumGroupModel = new AlbumGroupModel();
+        $AlbumGroupRoleModel = new AlbumGroupRoleModel();
         try {
+            M()->startTrans();
             switch ( $ac ) {
                 case 'edit':
                 case 'add': 
@@ -59,7 +55,6 @@ class AlbumController extends BaseController {
                     }
                     if ($_POST) {
                         $data['album_name'] = safe_string($_POST['album_name']);
-                        $data['group_id'] = $_SESSION['group_id'];
                         $banner = parse_url(safe_string($_POST['album_banner']));
                         $index = parse_url(safe_string($_POST['album_index']));
                         $share = parse_url(safe_string($_POST['album_share']));
@@ -69,6 +64,7 @@ class AlbumController extends BaseController {
                         $data['is_reward'] = safe_string($_POST['is_reward']) ? safe_string($_POST['is_reward']) : 0;
                         $data['album_share'] = $share['path'];
                         $data['album_des'] = safe_string($_POST['album_des']);
+                        $group_ids = $_POST['group_ids'];
                         if ( empty($data['album_name']) ) {
                             throw new \Think\Exception("商品名称不能为空！", 1);  
                         } 
@@ -87,7 +83,19 @@ class AlbumController extends BaseController {
                                 throw new \Think\Exception("相册修改失败！", 1);
                             }
                         }
-                        $this->success('相册操作成功！', '/Album?group_id='.$_SESSION['group_id']);
+                        $AlbumGroupRoleModel->where("album_id=$id")->delete();
+                        if(!empty($group_ids)){
+                            $data['album_id'] = $id;
+                            $data['create_time'] = date("Y-m-d H:i:s");
+                            foreach ($group_ids as $group_id){
+                                $data['group_id'] = $group_id;
+                                if ( false === $AlbumGroupRoleModel->add($data)) {
+                                    throw new \Think\Exception("添加分组失败！", 1);
+                                }
+                            }
+                        }
+                        M()->commit();
+                        $this->success('相册操作成功！', '/Album');
                         exit();
                     }
                     break;
@@ -96,7 +104,9 @@ class AlbumController extends BaseController {
                         throw new \Think\Exception("未知相册！", 1);
                     }
                     $M->where("id=$id")->delete();
-                    $this->success('相册操作成功！', '/Album?group_id='.$_SESSION['group_id']);
+                    $AlbumGroupRoleModel->where("album_id=$id")->delete();
+                    M()->commit();
+                    $this->success('相册操作成功！', '/Album');
                     exit();
                     break;
                 default:
@@ -105,14 +115,34 @@ class AlbumController extends BaseController {
                     }
                     break;
             }
+
+            $groups = $AlbumGroupModel->order("id desc")->select();
+            if(!empty($id)){
+                $roles = $AlbumGroupRoleModel->where("album_id={$id}")->order("id desc")->select();
+            }
+            if(!empty($groups)){
+                foreach ($groups as &$group){
+                    $group['is_selected'] = 0;
+                    if(!empty($roles)){
+                        foreach ($roles as $role){
+                            if($group['id'] == $role['group_id']){
+                                $group['is_selected'] = 1;
+                            }
+                        }
+                    }
+                }
+            }
             $id && $info = $M->where("id=$id")->find();
             #$info['g_banners'] = $info['g_banners'] ? unserialize($info['g_banners']) : array() ;
             $this->assign('ac',$ac);
+            $this->assign('groups',$groups);
+            $this->assign('roles',$roles);
             $this->assign('info',$info);
             $this->assign('savePicUrl',C('SavePicUrl'));
             $this->display();
         } catch ( \Think\Exception $e ) {
-            $this->error($e->getMessage(), '/Album?group_id='.$_SESSION['group_id'], 3);
+            M()->rollback();
+            $this->error($e->getMessage(), '/Album', 3);
         }
     }
 
@@ -165,7 +195,7 @@ class AlbumController extends BaseController {
             $this->assign('info',$info);
             $this->display();
         } catch ( \Think\Exception $e ) {
-            $this->error($e->getMessage(), '/Album?group_id='.$_SESSION['group_id'], 3);
+            $this->error($e->getMessage(), '/Album', 3);
         }
     }
 

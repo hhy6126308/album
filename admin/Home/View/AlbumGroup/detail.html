@@ -4,7 +4,7 @@
             <div class="widget am-cf">
                 <div class="widget-head am-cf">
                     <div class="widget-title  am-cf">
-                        相册组列表
+                        相册组详情
                         <ol class="am-breadcrumb" style="float: right">
                             <li><a href="#" class="am-icon-home">首页</a></li>
                             <foreach name="npc" item="vo" >
@@ -14,34 +14,17 @@
                     </div>
                 </div>
                 <div class="widget-body  am-fr">
-                    <if condition="$Think.session.ADMIN_TYPE == 20">
-                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
-                            <div class="am-form-group">
-                                <div class="am-btn-toolbar">
-                                    <div class="am-btn-group am-btn-group-xs">
-                                        <a href='/AlbumGroup/info?ac=add' class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增分组</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </if>
-                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
-                        <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                            <input type="text" class="am-form-field j-keyword" value="<{$keyword}>">
-                            <span class="am-input-group-btn">
-                            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search j-search" type="button" ></button>
-                        </span>
-                        </div>
-                    </div>
-
                     <div class="am-u-sm-12">
                         <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
                             <thead>
                             <tr class="am-text-nowrap">
-                                <th>分组ID</th>
-                                <th>组名</th>
-                                <th>简介</th>
+                                <th>相册id</th>
+                                <th>Banner</th>
+                                <th>启动图</th>
+                                <th>标题</th>
                                 <th>二维码</th>
+                                <th>介绍</th>
+                                <th>浏览数</th>
                                 <th>创建时间</th>
                                 <th>操作</th>
                             </tr>
@@ -49,20 +32,25 @@
                             <tbody>
                             <foreach name='lists' item='i'>
                                 <tr class="gradeX">
-                                    <td class="am-text-middle"><{$i.id}></td>
-                                    <td class="am-text-middle"><{$i.group_name}></td>
-                                    <td class="am-text-middle" style="max-width: 200px;"><{$i.group_desc}></td>
+                                    <td class="am-text-middle" style="max-width: 200px;"><{$i.id}></td>
+                                    <td>
+                                        <img src="<{$savePicUrl}><{$i.album_banner}>" class="tpl-table-line-img" alt="">
+                                    </td>
+                                    <td>
+                                        <img src="<{$savePicUrl}><{$i.album_index}>" class="tpl-table-line-img" alt="" style="width: 37px;height: 65.66px;">
+                                    </td>
+                                    <td class="am-text-middle" style="max-width: 200px;"><{$i.album_name}></td>
                                     <td>
                                         <img src="<{$i.aqrcode_url}>" class="tpl-table-line-img" alt="" style="width: 37px;height: 65.66px;">
                                     </td>
+                                    <td class="am-text-middle" style="max-width: 200px;"><{$i.album_des}></td>
+                                    <td class="am-text-middle"><{$i.album_pv}></td>
                                     <td class="am-text-middle"><{$i.create_time}></td>
                                     <td class="am-text-middle am-text-nowrap">
                                         <div class="tpl-table-black-operation">
-                                            <a href="/AlbumGroup/detail?group_id=<{$i.id}>">详情</a>
-                                            <a href="/UserGroupRole/users?group_id=<{$i.id}>">授权列表</a>
+                                            <a href="/AlbumGroup/images?album_id=<{$i.id}>">详情</a>
                                             <if condition="$Think.session.ADMIN_TYPE == 20">
-                                                <a href="/AlbumGroup/info?ac=edit&id=<{$i.id}>">编辑</a>
-                                                <a href="javascript:void(0);" data-name="<{$i.group_name}>" data-id="<{$i.id}>" class="j-del">删除</a>
+                                                <a href="javascript:void(0);" data-name="<{$i.album_name}>" data-aid="<{$i.id}>" data-gid="<{$group_id}>" class="j-del">移出组</a>
                                             </if>
                                         </div>
                                     </td>
@@ -84,14 +72,16 @@
 <script>
     $(".j-search").click(function(){
         var keyword = $('.j-keyword').val();
-        window.location.href = '/AlbumGroup?keyword=' + keyword;
+        window.location.href = '/Album?keyword=' + keyword;
     });
+
     $(".j-del").click(function(){
-        var group_name = $(this).attr("data-name");
-        var id = $(this).attr("data-id");
-        if(confirm('确定要删除分组 ' + group_name + ' 吗?'))
+        var album_name = $(this).attr("data-name");
+        var album_id = $(this).attr("data-aid");
+        var group_id = $(this).attr("data-gid");
+        if(confirm('确定要从组里移除相册（' + album_name + '）吗?'))
         {
-            window.location.href = "/AlbumGroup/info?ac=del&id=" + id;
+            window.location.href = "/AlbumGroup/detail?ac=reject&album_id=" + album_id + "&group_id=" + group_id;
             return true;
         }
         return false;

@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 
+use Home\Model\AlbumGroupRoleModel;
 use \Home\Model\AlbumModel;
 use \Home\Model\ImgModel;
 use Home\Model\RedisModel;
@@ -13,6 +14,8 @@ class AlbumController extends BaseController {
         $album_name = safe_string($_GET['album_name']);
         $group_id = safe_string($_GET['group_id']);
         $M = new AlbumModel;
+        $AlbumGroupRoleModel = new AlbumGroupRoleModel();
+        $where = "1=1";
         if(empty($group_id)){
             $redisM = new RedisModel();
             if($redisM->exists($token) == 0){
@@ -20,9 +23,23 @@ class AlbumController extends BaseController {
                 $rs['msg'] = '用户未登录';
                 $this->out_put($rs);
             }
-            $where = "1=1";
         }else{
-            $where = "group_id={$group_id}";
+            $album_ids = $AlbumGroupRoleModel->where("group_id={$group_id}")->order("id desc")->select();
+            if(empty($album_ids)){
+                $rs['error'] = 0;
+                $rs['msg'] = 'ok';
+                $rs['data'] = [];
+            }else{
+                $ids = array_column($album_ids, 'album_id');
+                if ($album_name) {
+                    $where .= " and  album_name like '%$album_name%'";
+                }
+                $rs['error'] = 0;
+                $rs['msg'] = 'ok';
+                $rs['data'] = $M->where($where)->where(['id' => ['in', $ids]])->order("id desc")->select();
+
+                $this->out_put($rs);
+            }
         }
 
         if ($album_name) {
@@ -30,7 +47,7 @@ class AlbumController extends BaseController {
         }
         $rs['error'] = 0;
         $rs['msg'] = 'ok';
-        $rs['data'] = $M->where($where)->order("id desc")->select();;
+        $rs['data'] = $M->where($where)->order("id desc")->select();
 
         $this->out_put($rs);
     }

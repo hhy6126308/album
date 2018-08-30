@@ -1,0 +1,127 @@
+<div class="row-content am-cf">
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">
+                        相册详情:<{$info.album_name}>
+                        <ol class="am-breadcrumb" style="float: right">
+                            <li><a href="#" class="am-icon-home">首页</a></li>
+                            <foreach name="npc" item="vo" >
+                                <li><a href="<{$vo.url}>"><{$vo.name}></a></li>
+                            </foreach>
+                        </ol>
+                    </div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                        <div class="am-form-group">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <a href='#' id="doDownload" class="am-btn am-btn-default am-btn-success"><span class="am-icon-download"></span> 批量下载</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                        <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                            <input type="text" class="am-form-field j-keyword" value="<{$keyword}>">
+                            <span class="am-input-group-btn">
+                            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search j-search" type="button" ></button>
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="am-u-sm-14">
+                        <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
+                            <thead>
+                            <tr class="am-text-nowrap">
+                                <th>
+                                    <input type="checkbox" name="checkAll" id="checkAll" class = "am-checkbox" value="0">
+                                </th>
+                                <th>缩略图</th>
+                                <th>相片名称</th>
+                                <th>创建时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <foreach name='detail' item='d'>
+                                <tr class="gradeX">
+                                    <td class="am-text-middle" style="max-width: 200px;">
+                                        <input type="checkbox" class = "am-checkbox-inline checkSingle" value="<{$d.id}>">
+                                    </td>
+                                    <td>
+                                        <img src="<{$savePicUrl}><{$d.img_url}>" class="tpl-table-line-img" alt="">
+                                    </td>
+                                    <td class="am-text-middle" style="max-width: 200px;"><{$d.img_name}></td>
+                                    <td class="am-text-middle"><{$d.create_time}></td>
+                                </tr>
+                            </foreach>
+                            <!-- more data -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="am-u-lg-12 am-cf">
+                        <div class="am-fr">
+                            <{$page}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(".j-search").click(function(){
+            var keyword = $('.j-keyword').val();
+            window.location.href = '/AlbumGroup/images?keyword=' + keyword + "&album_id=<{$info.id}>";
+            if(keyword){
+
+            }
+        });
+
+        $(function(){
+            $("#checkAll").click(function () {
+                $(".checkSingle").prop("checked", this.checked);
+            });
+
+            $(".checkSingle").click(function(){
+                if($(".checkSingle").length == $(".checkSingle:checked").length){
+                    $("#checkAll").prop("checked", true);
+                } else {
+                    $("#checkAll").prop("checked", false);
+                }
+            });
+
+
+            $("#doDownload").click(function(){
+                var ids = "";
+                var album_id = '<{$info.id}>';
+                $(".checkSingle:checked").each(function() {
+                    ids+=$(this).val();
+                    ids+=",";
+                });
+                ids = ids.substr(0, ids.lastIndexOf(","));
+                if(ids !== "" && ids !== "," && ids !== null){
+                    window.location.href = "/Download?ids="+ids+"&album_id="+album_id;
+                }else {
+                    alert('请先选择相片');
+                }
+
+//                $.ajax({
+//                    url:"/Download",
+//                    type:"get",
+//                    dataType:"json",
+//                    data:"ids="+ids+"&album_id="+album_id,
+//                    success:function(data){
+//                        console.log(data);
+//                        $(".checkSingle").prop("checked", false);
+//
+//                    },
+//                    error:function(){
+//                        alert('下载失败');
+//                    }
+//                });
+
+            });
+        });
+    </script>

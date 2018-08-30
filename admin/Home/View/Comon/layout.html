@@ -121,14 +121,20 @@
                     </a>
                 </li>
                 -->
-                <li class="sidebar-nav-link">
-                    <a href="/AlbumGroup" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'album_group'">active </if> ">
+                <if condition="$Think.session.ADMIN_TYPE == 20">
+                    <li class="sidebar-nav-link">
+                     <a href="/Album" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'album'">active </if> ">
                     <i class="am-icon-photo sidebar-nav-link-logo"></i> 相册管理
                     </a>
+                    </li>
+                </if>
+
+                <li class="sidebar-nav-link">
+                    <a href="/AlbumGroup" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'album_group'">active </if> ">
+                    <i class="am-icon-photo sidebar-nav-link-logo"></i> 相册组管理
+                    </a>
                 </li>
-
              <if condition="$Think.session.ADMIN_TYPE == 20">
-
                 <li class="sidebar-nav-link">
                     <a href="/Reward" class="sidebar-nav-sub-title   <if condition = "$sidebar_name == 'reward'">active </if> ">
                     <i class="am-icon-gift sidebar-nav-link-logo"></i> 打赏管理

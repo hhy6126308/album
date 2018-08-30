@@ -9,8 +9,7 @@ use Home\Model\UserSocialModel;
 class UserGroupRoleController extends BaseController {
 
     protected $npc = array(
-        array("url" => '/AlbumGroup', 'name' => '相册组列表' ),
-        array("url" => '/UserGroupRole/users','name' => '相册组授权列表' ),
+        array("url" => '/AlbumGroup', 'name' => '相册组列表' )
     );
 
     public function _initialize () {
@@ -86,12 +85,12 @@ class UserGroupRoleController extends BaseController {
             $AlbumGroupModel = new AlbumGroupModel();
             if ($ac && $ac == 'add') {
                 try {
+                    M()->startTrans();
                     $group_ids = $_POST['group_ids'];
+                    $UserGroupRoleModel->where("user_id=$id")->delete();
                     if(!empty($group_ids)){
                         $data['user_id'] = $id;
                         $data['create_time'] = date("Y-m-d H:i:s");
-                        M()->startTrans();
-                        $UserGroupRoleModel->where("user_id=$id")->delete();
                         foreach ($group_ids as $group_id){
                             $data['group_id'] = $group_id;
                             if ( false === $UserGroupRoleModel->add($data)) {
@@ -127,7 +126,9 @@ class UserGroupRoleController extends BaseController {
             $this->assign('roles',$roles);
             $this->assign('sidebar_name','user_list');
         }
-
+        $this->npc = array(
+            array("url" => '/User', 'name' => '用户列表' )
+        );
         $this->display('role');
     }
 }

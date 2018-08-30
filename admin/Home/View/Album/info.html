@@ -22,6 +22,39 @@
                             </div>
                         </div>
                         <div class="am-form-group">
+                            <label class="am-u-sm-3 am-form-label">添加分组</label>
+                            <div class="am-u-sm-9">
+                                <select multiple data-am-selected name="group_ids[]">
+                                    <foreach name="groups" item="group" >
+                                        <option value="<{$group.id}>" <if condition = "$group.is_selected == 1">selected </if>><{$group.group_name}></option>
+                                    </foreach>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">人脸识别状态</label>
+                            <div class="am-u-sm-9">
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_face" value="0" <{$info['is_face']==0 ? 'checked':''}> > 不允许&nbsp;&nbsp;
+                                </label>
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_face" value="1" <{$info['is_face']==1 ? 'checked':''}> > 允许&nbsp;&nbsp;
+                                </label>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">打赏状态</label>
+                            <div class="am-u-sm-9">
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_reward" value="0" <{$info['is_reward']==0 ? 'checked':''}> > 不允许&nbsp;&nbsp;
+                                </label>
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_reward" value="1" <{$info['is_reward']==1 ? 'checked':''}> > 允许&nbsp;&nbsp;
+                                </label>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
                             <label for="user-weibo" class="am-u-sm-3 am-form-label">相册Banner <span class="tpl-form-line-small-title">Images</span></label>
                             <div class="am-u-sm-9">
                                 <div class="am-form-group am-form-file">
@@ -60,28 +93,6 @@
                                     <button type="button" class="am-btn am-btn-danger am-btn-sm j-upload-img" data-h='1334' data-w='750'>
                                         <i class="am-icon-cloud-upload"></i>添加分享图</button>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="am-form-group">
-                            <label for="user-intro" class="am-u-sm-3 am-form-label">人脸识别状态</label>
-                            <div class="am-u-sm-9">
-                                <label class="am-form-label">
-                                    <input type="radio" name="is_face" value="0" <{$info['is_face']==0 ? 'checked':''}> > 不允许&nbsp;&nbsp;
-                                </label>
-                                <label class="am-form-label">
-                                    <input type="radio" name="is_face" value="1" <{$info['is_face']==1 ? 'checked':''}> > 允许&nbsp;&nbsp;
-                                </label>
-                            </div>
-                        </div>
-                        <div class="am-form-group">
-                            <label for="user-intro" class="am-u-sm-3 am-form-label">打赏状态</label>
-                            <div class="am-u-sm-9">
-                                <label class="am-form-label">
-                                    <input type="radio" name="is_reward" value="0" <{$info['is_reward']==0 ? 'checked':''}> > 不允许&nbsp;&nbsp;
-                                </label>
-                                <label class="am-form-label">
-                                    <input type="radio" name="is_reward" value="1" <{$info['is_reward']==1 ? 'checked':''}> > 允许&nbsp;&nbsp;
-                                </label>
                             </div>
                         </div>
                         <div class="am-form-group">
