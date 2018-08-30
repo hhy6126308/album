@@ -28,7 +28,6 @@ class FaceAiController extends BaseController
         while (true) {
             $data = $this->redis->rpop(self::REDIS_LIST_FACE_LIST);
             if (!$data) {
-                $this->log("no data");
                 sleep(1);
                 continue;
             }
