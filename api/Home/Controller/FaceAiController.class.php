@@ -71,7 +71,7 @@ class FaceAiController extends BaseController
             $imageResM    = new FaceTaskResultModel();
             if (isset($res['errno'])) {
                 $score = $res['confidence'];
-                if ($score >= 50) {
+                if ($score >= 80) {
                     $this->log("ok");
                     $cell = array(
                         'img_url' => $data['image_url_2'],
