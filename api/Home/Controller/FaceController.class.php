@@ -6,6 +6,7 @@ use Home\Model\AlbumModel;
 use \Home\Model\FaceTaskModel;
 use \Home\Model\FaceTaskResultModel;
 use \Home\Model\ImgModel;
+use \Home\Model\AlbumGroupRoleModel;
 use Home\Model\RedisModel;
 
 class FaceController extends BaseController
@@ -29,22 +30,6 @@ class FaceController extends BaseController
         Vendor('Baiduai.AipFace');
         $this->client = new \Vendor\AipFace(self::APP_ID, self::API_KEY, self::SECRET_KEY);
         $this->redis  = new RedisModel();
-    }
-
-    public function test()
-    {
-        $result = $this->client->match([
-            [
-                'image'      => "42975681652f2907fc5cb62093a781d5",
-                'image_type' => 'FACE_TOKEN',
-            ],
-            [
-                'image'      => "https://image.album.iqikj.com/20180812/11/11_2071_DSC_4206.jpg",
-                'image_type' => 'URL',
-            ]
-        ]);
-
-        echo json_encode($result);
     }
 
     public function querytask()
@@ -83,43 +68,80 @@ class FaceController extends BaseController
 
     public function createTask()
     {
-        $album_id = safe_string($_GET['album_id']);
-        $space_id = safe_string($_GET['space_id']);
-        $img_url  = safe_string($_GET['img_url']);
+        try {
+            $album_id = safe_string($_GET['album_id']);
+            $space_id = safe_string($_GET['space_id']);
+            $img_url  = safe_string($_GET['img_url']);
 
-        if (!$img_url) {
+            if (!$img_url) {
+                throw new \Exception('请上传图片');
+            }
+
+            if (empty($album_id) && empty($space_id)) {
+                throw new \Exception('参数不能为空');
+            }
+
+            $albumM = new AlbumModel();
+            $imgM = new ImgModel();
+            $type = $album_id ? 0 : 1;
+            $type_id = 0;
+            $count = 0;
+            if ($type == 0) {
+                $album = $albumM->where("id = $album_id")->find();
+                if (!$album) {
+                    throw new \Exception('未知相册！');
+                }
+                if (!$album['is_face']) {
+                    throw new \Exception('该相册不支持人脸识别！');
+                }
+                $type_id = $album_id;
+                $count = $imgM->where("album_id = $album_id")->count();
+            } else {
+                $type_id = $space_id;
+                $AlbumGroupRoleModel = new AlbumGroupRoleModel();
+                $album_lists = $AlbumGroupRoleModel->where("group_id = $space_id")->select();
+                foreach ($album_lists as $val) {
+                    $album_id = $val['album_id'];
+                    $album = $albumM->where("id = $album_id")->find();
+                    if ($album && $album['is_face']) {
+                        $count += $imgM->where("album_id = $album_id")->count();
+                    }
+                }
+            }
+
+            if ($count == 0) {
+                throw new \Exception('未找到可识别照片！');
+            }
+
+            $faceTask = new FaceTaskModel();
+            $data     = [
+                'type'    => $type,
+                'type_id' => $type_id,
+                'img_url' => $img_url,
+                'status'  => 0,
+                'c_t'     => time(),
+                'u_t'     => time(),
+            ];
+            $res = $faceTask->add($data);
+            if (!$res) {
+                throw new \Exception('识别失败！');
+            }
+
+            $data = [
+                "id" => $res,
+                'count' => $count
+            ];
+            $redis = new RedisModel();
+            $redis->set("face_task_" . $res, json_encode($data));
+            $rs['error'] = 0;
+            $rs['msg']   = 'ok';
+            $rs['data']  = $data;
+            $this->out_put($rs);
+        } catch (\Exception $e) {
             $rs['error'] = 1;
-            $rs['msg']   = '请上传图片';
+            $rs['msg']   = $e->getMessage();
             $this->out_put($rs);
         }
-
-        if (empty($album_id) && empty($space_id)) {
-            $rs['error'] = 1;
-            $rs['msg']   = '参数不能为空！';
-            $this->out_put($rs);
-        }
-
-        $faceTask = new FaceTaskModel();
-        $data     = [
-            'type'    => $album_id ? 0 : 1,
-            'type_id' => $album_id ? $album_id : $space_id,
-            'img_url' => $img_url,
-            'status'  => 0,
-            'c_t'     => time(),
-            'u_t'     => time(),
-        ];
-        $res      = $faceTask->add($data);
-        if (!$res) {
-            $rs['error'] = 1;
-            $rs['msg']   = '识别失败';
-            $this->out_put($rs);
-        }
-
-        $rs['error'] = 0;
-        $rs['msg']   = 'ok';
-        $rs['data']  = $res;
-
-        $this->out_put($rs);
     }
 
     public function recognition()
