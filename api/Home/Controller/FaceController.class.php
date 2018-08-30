@@ -55,10 +55,19 @@ class FaceController extends BaseController
 
         $items = $image->where("task_id=$id")->order("score desc")->select();
 
+        $redis = new RedisModel();
+        $info = $redis->get("face_task_" . $id);
+        $info = json_decode($info, true);
+
+        if ($info['task_num'] >= $info['task_count']) {
+            $res['status'] = 1;
+        }
+
         $rs['error'] = 0;
         $rs['msg']   = 'ok';
         $rs['data']  = [
             'status' => $res['status'],
+            'task_num' => $info['task_num'],
             'items'  => $items,
         ];
 
@@ -129,7 +138,8 @@ class FaceController extends BaseController
 
             $data = [
                 "id" => $res,
-                'count' => $count
+                'task_count' => $count,
+                'task_num' => 0,
             ];
             $redis = new RedisModel();
             $redis->set("face_task_" . $res, json_encode($data));

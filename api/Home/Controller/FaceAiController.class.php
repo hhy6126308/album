@@ -45,6 +45,11 @@ class FaceAiController extends BaseController
                 continue;
             }
 
+            $info = $this->redis->get("face_task_" . $task_id);
+            $info = json_decode($info, true);
+            $info['task_num'] = $info['task_num'] + 1;
+            $this->redis->set("face_task_" . $task_id, json_encode($info));
+
             $req = array(
                 "type"        => 0,
                 "image_url_1" => $data['image_url_1'], //"https://image.album.iqikj.com/5b841028ee232.jpg",
