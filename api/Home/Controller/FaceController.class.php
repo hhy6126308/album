@@ -159,6 +159,7 @@ class FaceController extends BaseController
         try {
             $faceTask = new FaceTaskModel();
             $albumM = new AlbumModel();
+            $AlbumGroupRoleModel = new AlbumGroupRoleModel();
             register_shutdown_function([$this, 'shutdown']);
             while (true) {
                 $task_list = $faceTask->where('status = 0')->select();
@@ -176,10 +177,10 @@ class FaceController extends BaseController
                     };
                     $this->log('开始');
                     if ($this->task['type'] == 1) {
-                        $album_list = $albumM->where("group_id = " . $this->task['type_id'])->select();
+                        $album_list = $AlbumGroupRoleModel->where("group_id = " . $this->task['type_id'])->select();
                         if ($album_list) {
                             foreach ($album_list as $album) {
-                                $this->recognitionAlbum($album['id']);
+                                $this->recognitionAlbum($album['album_id']);
                             }
                         }
                     } else {
