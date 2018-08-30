@@ -45,10 +45,20 @@ class FaceAiController extends BaseController
                 continue;
             }
 
-            $info = $this->redis->get("face_task_" . $task_id);
-            $info = json_decode($info, true);
-            $info['task_num'] = $info['task_num'] + 1;
-            $this->redis->set("face_task_" . $task_id, json_encode($info));
+            while (true){
+                if ($this->redis->setnx("face_task_count_" . $task_id, "lock")) {
+                    $info = $this->redis->get("face_task_" . $task_id);
+                    $info = json_decode($info, true);
+                    $info['task_num'] = $info['task_num'] + 1;
+                    $this->redis->set("face_task_" . $task_id, json_encode($info));
+                    break;
+                } else {
+                    usleep(10000);
+                    continue;
+                }
+
+            }
+
 
             $req = array(
                 "type"        => 0,
