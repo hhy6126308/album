@@ -2,6 +2,7 @@
 
 namespace Home\Controller;
 
+use Home\Model\AlbumModel;
 use \Home\Model\FaceTaskModel;
 use \Home\Model\FaceTaskResultModel;
 use \Home\Model\ImgModel;
@@ -13,6 +14,8 @@ class FaceController extends BaseController
     const APP_ID = '11728659';
     const API_KEY = 'WWKqasb1sTQYHWu9cqZT4ilu';
     const SECRET_KEY = 'VzNkFWWAk7ddiqmH7052L7q1l46TZBmx';
+
+    const REDIS_LIST_FACE_LIST = 'redis_list_face_list';
 
     private $redis_lock = 'face_recognition_lock_tmp';
 
@@ -123,23 +126,30 @@ class FaceController extends BaseController
     {
         try {
             $faceTask = new FaceTaskModel();
+            $albumM = new AlbumModel();
             register_shutdown_function([$this, 'shutdown']);
             while (true) {
                 $task_list = $faceTask->where('status = 0')->select();
                 if (!$task_list) {
-                    sleep(5);
+                    sleep(1);
                     continue;
                 }
 
                 foreach ($task_list as $task) {
                     $this->task = $task;
                     $this->face_token = '';
-                    if (!$this->registerLosk()) {
+                    $id = $this->task['id'];
+                    if (!$this->registerLosk() || $faceTask->where('status = 1 and id = ' . $id)->find()) {
                         continue;
                     };
                     $this->log('开始');
                     if ($this->task['type'] == 1) {
-                        //TODO
+                        $album_list = $albumM->where("group_id = " . $this->task['type_id'])->select();
+                        if ($album_list) {
+                            foreach ($album_list as $album) {
+                                $this->recognitionAlbum($album['id']);
+                            }
+                        }
                     } else {
                         $this->recognitionAlbum($this->task['type_id']);
 
@@ -170,17 +180,23 @@ class FaceController extends BaseController
             if (!$img['img_url'])
                 continue;
             $url = 'https://image.album.iqikj.com' . $img['img_url'];
-            $score =$this->recognitionImage($this->task['img_url'], $url);
-            if ($score > 30) {
-                $cell = array(
-                    'img_url' => $url,
-                    'task_id' => $this->task['id'],
-                    'score' => $score,
-                    'c_t' => time(),
-                    'u_t' => time(),
-                );
-                $imageResM->add($cell);
-            }
+            //$score =$this->recognitionImage($this->task['img_url'], $url);
+            $send = array(
+                'task_id' => $this->task['id'],
+                "image_url_1" => $this->task['img_url'], //"https://image.album.iqikj.com/5b841028ee232.jpg",
+                "image_url_2" => $url
+            );
+            $this->redis->lpush(self::REDIS_LIST_FACE_LIST, json_encode($send));
+//            if ($score > 30) {
+//                $cell = array(
+//                    'img_url' => $url,
+//                    'task_id' => $this->task['id'],
+//                    'score' => $score,
+//                    'c_t' => time(),
+//                    'u_t' => time(),
+//                );
+//                $imageResM->add($cell);
+//            }
         }
     }
 
