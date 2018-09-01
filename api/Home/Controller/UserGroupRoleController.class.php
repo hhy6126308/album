@@ -23,14 +23,21 @@ class UserGroupRoleController extends BaseController {
             $data['user_social_id'] = $user['id'];
             $data['group_id'] = $id;
             $data['create_time'] = date("Y-m-d H:i:s");
-            if(false === $UserGroupRoleModel->add($data)){
-                $rs['error'] = 1;
-                $rs['msg'] = '授权失败';
-                $rs['data'] = '';
-            }else{
+            $info = $UserGroupRoleModel->where("user_social_id = " .$user['id'] . " and group_id = $id")->find();
+            if ($info) {
                 $rs['error'] = 0;
                 $rs['msg'] = 'ok';
                 $rs['data'] = '';
+            } else {
+                if(false === $UserGroupRoleModel->add($data)){
+                    $rs['error'] = 1;
+                    $rs['msg'] = '授权失败';
+                    $rs['data'] = '';
+                }else{
+                    $rs['error'] = 0;
+                    $rs['msg'] = 'ok';
+                    $rs['data'] = '';
+                }
             }
         }else{
             $rs['error'] = 1;
