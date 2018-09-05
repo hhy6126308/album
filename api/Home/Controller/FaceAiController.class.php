@@ -2,16 +2,14 @@
 
 namespace Home\Controller;
 
-use Home\Model\AlbumModel;
-use \Home\Model\FaceTaskModel;
 use \Home\Model\FaceTaskResultModel;
-use \Home\Model\ImgModel;
 use Home\Model\RedisModel;
 
 class FaceAiController extends BaseController
 {
 
     private $redis;
+    private $send = [];
 
     const REDIS_LIST_FACE_LIST = 'redis_list_face_list';
 
@@ -44,19 +42,17 @@ class FaceAiController extends BaseController
                 continue;
             }
 
-            while (true){
-                if ($this->redis->setnx("face_task_count_" . $task_id, "lock")) {
-                    $info = $this->redis->get("face_task_" . $task_id);
+            $this->send[$task_id] = isset($this->send[$task_id]) ? $this->send[$task_id] + 1 : 1;
+            $send = $this->send;
+            foreach ($send as $key => $val) {
+                if ($this->redis->setnx("face_task_count_" . $key, "lock")) {
+                    $info = $this->redis->get("face_task_" . $key);
                     $info = json_decode($info, true);
-                    $info['task_num'] = $info['task_num'] + 1;
-                    $this->redis->set("face_task_" . $task_id, json_encode($info));
-                    $this->redis->del("face_task_count_" . $task_id);
-                    break;
-                } else {
-                    usleep(10000);
-                    continue;
+                    $info['task_num'] = $info['task_num'] + $val;
+                    $this->redis->set("face_task_" . $key, json_encode($info));
+                    $this->redis->del("face_task_count_" . $key);
+                    unset($this->send[$key]);
                 }
-
             }
 
 
