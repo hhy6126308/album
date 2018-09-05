@@ -211,6 +211,7 @@ class FaceController extends BaseController
         $imgModel = new ImgModel();
         $imageResM    = new FaceTaskResultModel();
         $img_list = $imgModel->where("album_id = $album_id")->select();
+        $queue = $this->getQueue();
         foreach ($img_list as $img) {
             if (!$img['img_url'])
                 continue;
@@ -221,18 +222,27 @@ class FaceController extends BaseController
                 "image_url_1" => $this->task['img_url'], //"https://image.album.iqikj.com/5b841028ee232.jpg",
                 "image_url_2" => $url
             );
-            $this->redis->lpush(self::REDIS_LIST_FACE_LIST, json_encode($send));
-//            if ($score > 30) {
-//                $cell = array(
-//                    'img_url' => $url,
-//                    'task_id' => $this->task['id'],
-//                    'score' => $score,
-//                    'c_t' => time(),
-//                    'u_t' => time(),
-//                );
-//                $imageResM->add($cell);
-//            }
+            $this->redis->lpush($queue, json_encode($send));
         }
+    }
+
+    private function getQueue()
+    {
+        $num = 0;
+        $min = 0;
+        for ($i = 0; $i < 5; $i++) {
+            $len = $this->redis->llen(self::REDIS_LIST_FACE_LIST . $i);
+            if ($len == 0) {
+                $num = $i;
+                break;
+            }
+            if($min > $len) {
+                $min = $len;
+                $num = $i;
+            }
+        }
+        return self::REDIS_LIST_FACE_LIST . $num;
+
     }
 
     private function recognitionImage($url1, $url2)

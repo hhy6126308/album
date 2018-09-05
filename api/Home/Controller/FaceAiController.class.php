@@ -10,6 +10,8 @@ class FaceAiController extends BaseController
 
     private $redis;
     private $send = [];
+    private $queue_id = 0;
+    private $empty_count = 0;
 
     const REDIS_LIST_FACE_LIST = 'redis_list_face_list';
 
@@ -24,10 +26,18 @@ class FaceAiController extends BaseController
     public function exec()
     {
         while (true) {
-            $data = $this->redis->rpop(self::REDIS_LIST_FACE_LIST);
+
+            $data = $this->redis->rpop(self::REDIS_LIST_FACE_LIST . $this->queue_id);
+            $this->queue_id = $this->queue_id >= 4 ? 0 : $this->queue_id + 1;
             if (!$data) {
-                sleep(1);
+                $this->empty_count++;
+                if ($this->empty_count >= 5) {
+                    $this->empty_count = 0;
+                    sleep(1);
+                }
                 continue;
+            } else {
+                $this->empty_count = 0;
             }
             $data = json_decode($data, true);
             if (!$data) {
