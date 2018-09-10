@@ -5,6 +5,7 @@ use \Home\Model\AlbumGroupModel;
 use Home\Model\UserGroupRoleModel;
 use Home\Model\RedisModel;
 use Home\Model\UserSocialModel;
+use Home\Model\UserModel;
 
 class AlbumGroupController extends BaseController {
 
@@ -19,6 +20,18 @@ class AlbumGroupController extends BaseController {
             //get admin
             $UserGroupRoleModel = new UserGroupRoleModel();
             $roles = $UserGroupRoleModel->where("user_id={$user_id}")->order("id desc")->select();
+            $userM = new UserModel();
+            $user = $userM->where("id = {$user_id}")->find();
+            //超管
+            if ($user && $user['user_type'] == 20) {
+                $cell = [
+                    'id' => 0,
+                    'group_name' => '公共相册',
+                    'group_desc' => '公共相册',
+                    'aqrcode_url' => 'https://image.album.iqikj.com/gh_9a715158ff89_344.jpg'
+                ];
+                array_unshift($roles, $cell);
+            }
         }else{
             $openid = $this->getOpenid();
             //get user
