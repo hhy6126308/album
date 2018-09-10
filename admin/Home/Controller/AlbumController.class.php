@@ -186,6 +186,8 @@ class AlbumController extends BaseController {
             $pageM = new \Vendor\MyPaging($count ,$_GET['page'] );
             $page = $pageM->show();
             $detail = $image->where($where)->page($_GET['page'], 20)->order("id desc")->select();
+            $pageNum = isset($_GET['page']) ? $_GET['page'] : 1;
+            $this->assign('pageNum', $pageNum);
             $this->assign('page',$page);
             $this->assign('info',$info);
             $this->assign('detail',$detail);

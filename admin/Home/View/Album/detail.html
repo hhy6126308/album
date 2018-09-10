@@ -66,7 +66,7 @@
                                     <if condition="$Think.session.ADMIN_TYPE == 20">
                                         <td class="am-text-middle">
                                             <div class="tpl-table-black-operation">
-                                                <a href="/Album/detail?ac=del&album_id=<{$info.id}>&id=<{$d.id}>"  onclick="deleteImg()">删除</a>
+                                                <a href="/Album/detail?ac=del&album_id=<{$info.id}>&id=<{$d.id}>&page=<{$pageNum}>"  onclick="deleteImg()">删除</a>
                                             </div>
                                         </td>
                                     </if>
@@ -150,7 +150,7 @@
                 if(ids !== "" && ids !== "," && ids !== null){
                     if(confirm('确定要删除吗?'))
                     {
-                        window.location.href = "/Album/detail?ac=delImages&ids="+ids+"&album_id="+album_id;
+                        window.location.href = "/Album/detail?ac=delImages&ids="+ids+"&album_id="+album_id+"&page=" + "<{$pageNum}>";
                     }
                 }else {
                     alert('请先选择相片');
