@@ -32,12 +32,13 @@ class BaseController extends Controller {
         $user_type = session("ADMIN_TYPE");
         if($user_type == 10){
             $this->menus['AlbumGroup'] = 1;
-            $this->menus['Album'] = 1;
+            $this->menus['AlbumLock'] = 1;
             $this->menus['UserGroupRole'] = 1;
         }elseif ($user_type == 20){
             $this->menus = [
                 'AlbumGroup' => 1,
                 'Album' => 1,
+                'AlbumLock' => 1,
                 'Reward' => 1,
                 'User' => 1,
                 'UserGroupRole' => 1,

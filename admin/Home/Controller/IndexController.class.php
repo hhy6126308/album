@@ -10,7 +10,9 @@ class IndexController extends BaseController {
     }
 
     public function index(){
-        redirect("/Album");
+        $user_type = session("ADMIN_TYPE");
+        $url = $user_type > 10 ? '/Album' : '/AlbumGroup';
+        redirect($url);
         //$this->display('index');
     }
 }

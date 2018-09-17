@@ -1,0 +1,51 @@
+<div class="row-content am-cf">
+    <div class="row">
+
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">
+                        <{$info.album_name}>-相册加密
+                        <ol class="am-breadcrumb" style="float: right">
+                            <li><a href="#" class="am-icon-home">首页</a></li>
+                            <!--<foreach name="npc" item="vo" >-->
+                                <!--<li><a href="<{$vo.url}>"><{$vo.name}></a></li>-->
+                            <!--</foreach>     -->
+                        </ol>
+                    </div>
+                </div>
+                <div class="widget-body am-fr">
+
+                    <form class="am-form tpl-form-border-form tpl-form-border-br" method="post" action='/AlbumLock/index?album_id=<{$info.id}>'>
+
+
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">是否加密</label>
+                            <div class="am-u-sm-9">
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_lock" value="0" <{$info['is_lock']==0 ? 'checked':''}> > 不加锁&nbsp;&nbsp;
+                                </label>
+                                <label class="am-form-label">
+                                    <input type="radio" name="is_lock" value="1" <{$info['is_lock']==1 ? 'checked':''}> > 加锁&nbsp;&nbsp;
+                                </label>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">设置密码</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" placeholder="输入密码" name="lock_pwd"  value="<{$info.lock_pwd}>">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

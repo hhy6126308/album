@@ -77,6 +77,39 @@ class AlbumController extends BaseController {
         $this->out_put($rs);
     }
 
+    public function verify()
+    {
+        $album_id = safe_string($_GET['album_id']);
+        $lock = safe_string($_GET['lock']);
+        if(empty($album_id)){
+            $rs['error'] = 1;
+            $rs['msg'] = '参数不能为空！';
+            $this->out_put($rs);
+        }
+
+        $album = new AlbumModel();
+        $info = $album->where("id=$album_id")->find();
+        if(empty($info)){
+            $rs['error'] = 1;
+            $rs['msg'] = '相册不存在！';
+            $this->out_put($rs);
+        }
+
+        if ($info['lock_pwd'] == $lock) {
+            $rs['error'] = 0;
+            $rs['msg'] = 'ok';
+        } else {
+            $rs['error'] = 1;
+            $rs['msg'] = '密码错误！';
+        }
+
+        $rs['error'] = 0;
+        $rs['msg'] = 'ok';
+        $rs['data']['album'] = $info;
+
+        $this->out_put($rs);
+    }
+
     public function pv()
     {
         $album_id = safe_string($_GET['album_id']);

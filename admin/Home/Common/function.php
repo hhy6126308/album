@@ -126,3 +126,15 @@ function getData( $url ,$info=false,$referer="",$gzip=false,$data='',$header=arr
     curl_close($ch);
     return $result;
 }
+
+function array2Ids($result, $key='id', $return_array = false) {
+    $list = array();
+    foreach ($result as $item) {
+        $list[] = $item[$key];
+    }
+    if($return_array){
+        return $list;
+    } else {
+        return join(',' , $list);
+    }
+}

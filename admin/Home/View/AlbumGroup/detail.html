@@ -41,7 +41,7 @@
                                     </td>
                                     <td class="am-text-middle" style="max-width: 200px;"><{$i.album_name}></td>
                                     <td>
-                                        <img src="<{$i.aqrcode_url}>" class="tpl-table-line-img" alt="" style="width: 37px;height: 65.66px;">
+                                        <img src="<{$i.aqrcode_url}>" class="tpl-table-line-img" alt="" style="width: 100px;">
                                     </td>
                                     <td class="am-text-middle" style="max-width: 200px;"><{$i.album_des}></td>
                                     <td class="am-text-middle"><{$i.album_pv}></td>
@@ -49,6 +49,7 @@
                                     <td class="am-text-middle am-text-nowrap">
                                         <div class="tpl-table-black-operation">
                                             <a href="/AlbumGroup/images?album_id=<{$i.id}>">详情</a>
+                                            <a href="/AlbumLock/index?album_id=<{$i.id}>">加锁</a>
                                             <if condition="$Think.session.ADMIN_TYPE == 20">
                                                 <a href="javascript:void(0);" data-name="<{$i.album_name}>" data-aid="<{$i.id}>" data-gid="<{$group_id}>" class="j-del">移出组</a>
                                             </if>

@@ -41,7 +41,7 @@ class AlbumGroupController extends BaseController {
             $userM = new UserModel();
             $user = $userM->where("id = {$user_id}")->find();
             //超管
-            if ($user) {
+            if ($user && $user['user_type'] > 10) {
                 $cell = [
                     'id' => "0",
                     'group_name' => '公共相册',

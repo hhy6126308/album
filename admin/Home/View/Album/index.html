@@ -69,6 +69,7 @@
                                     <td class="am-text-middle am-text-nowrap">
                                         <div class="tpl-table-black-operation">
                                             <a href="/Album/detail?album_id=<{$i.id}>">详情</a>
+                                            <a href="/AlbumLock/index?album_id=<{$i.id}>">加锁</a>
                                             <if condition="$Think.session.ADMIN_TYPE == 20">
                                                 <a href="/Album/info?ac=edit&id=<{$i.id}>">编辑</a>
                                                 <a href="/Album/upload?id=<{$i.id}>">上传</a>
